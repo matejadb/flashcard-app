@@ -1,0 +1,15 @@
+/*------------------HEADER------------------*/
+.app-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+/*------------------------------------------*/
+
+/*----------------STUDY-MODE----------------*/
+.study-mode-content {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 3.2rem;
+}
+/*------------------------------------------*/

@@ -67,6 +67,10 @@ html {
 }
 
 body {
+	display: flex;
+	flex-direction: column;
+	gap: 3.2rem;
+	padding: 2.4rem 10rem;
 	background-color: var(--neutral-100);
 }
 
@@ -229,7 +233,7 @@ FOR MOBILE
 }
 
 .tab {
-	padding: 1rem 1.6rem;
+	padding: 1.2rem 1.6rem;
 	border: 1px solid transparent;
 	border-radius: 999px;
 	color: var(--neutral-900);
