@@ -36,7 +36,7 @@
 					role="tab"
 					id="study-tab"
 					aria-controls="study-mode-panel"
-					class="tab tab--current"
+					class="tab tab--current text--preset-4-semi"
 					type="button"
 					aria-selected="true"
 				>
@@ -46,7 +46,7 @@
 					role="tab"
 					id="all-cards-tab"
 					aria-controls="all-cards-panel"
-					class="tab"
+					class="tab text--preset-4-semi"
 					type="button"
 					aria-selected="false"
 				>
@@ -64,50 +64,56 @@
 			>
 				<div class="flashcard-section">
 					<header class="flashcard-section-header">
-						<div class="flashcard-controls">
-							<div class="category-filter">
-								<!-- will be dropdown -->
-								<button
-									class="btn btn--border"
-									aria-expanded="false"
-									aria-haspopup="listbox"
-									type="button"
-								>
-									<span>All Categories</span>
-									<img
-										src="./assets/images/icon-chevron-down.svg"
-										role="presentation"
-										alt=""
-									/>
-								</button>
+						<div class="category-filter">
+							<!-- will be dropdown -->
+							<button
+								class="btn btn--border"
+								aria-expanded="false"
+								aria-haspopup="listbox"
+								type="button"
+							>
+								<span class="text--preset-4-medium">All Categories</span>
+								<img
+									src="./assets/images/icon-chevron-down.svg"
+									role="presentation"
+									alt=""
+								/>
+							</button>
 
+							<div class="mastered-controls">
 								<input
 									type="checkbox"
 									id="hide-mastered"
 									class="hide-mastered"
 								/>
-								<label for="hide-mastered">Hide Mastered</label>
+								<label for="hide-mastered" class="text--preset-4-medium"
+									>Hide Mastered</label
+								>
 							</div>
-
-							<button class="btn btn--border" type="button">
-								<img
-									src="./assets/images/icon-shuffle.svg"
-									role="presentation"
-									alt=""
-								/>
-								<span>Shuffle</span>
-							</button>
 						</div>
+
+						<button class="btn btn--border" type="button">
+							<img
+								src="./assets/images/icon-shuffle.svg"
+								role="presentation"
+								alt=""
+							/>
+							<span class="text--preset-4-medium">Shuffle</span>
+						</button>
 					</header>
 					<hr />
 
 					<div class="flashcard-container">
 						<article class="flashcard-content" aria-live="polite">
-							<span class="flashcard-tag">Web Development</span>
+							<span class="flashcard-tag text--preset-6">Web Development</span>
 
 							<div class="question-container">
-								<h2>What does HTML stand for?</h2>
-								<p>Click to reveal answer</p>
+								<h2 class="question-text text--preset-1">
+									What does HTML stand for?
+								</h2>
+								<p class="reveal-answer text--preset-4-medium">
+									Click to reveal answer
+								</p>
 							</div>
 
 							<div class="progress-container">
@@ -119,7 +125,7 @@
 									aria-label="Question progress"
 									class="progress-bar"
 								></div>
-								<span>0/5</span>
+								<span class="progress-level text--preset-6">0/5</span>
 							</div>
 						</article>
 
@@ -142,30 +148,30 @@
 								<span>Reset Progress</span>
 							</button>
 						</div>
-						<hr />
-
-						<nav aria-label="Flashcard navigation" class="navigation-controls">
-							<button class="btn btn--border" type="button">
-								<img
-									src="./assets/images/icon-chevron-left.svg"
-									role="presentation"
-									alt=""
-								/>
-								<span>Previous</span>
-							</button>
-
-							<span>Card 1 of 40</span>
-
-							<button class="btn btn--border" type="button">
-								<span>Next</span>
-								<img
-									src="./assets/images/icon-chevron-right.svg"
-									role="presentation"
-									alt=""
-								/>
-							</button>
-						</nav>
 					</div>
+					<hr />
+
+					<nav aria-label="Flashcard navigation" class="navigation-controls">
+						<button class="btn btn--border" type="button">
+							<img
+								src="./assets/images/icon-chevron-left.svg"
+								role="presentation"
+								alt=""
+							/>
+							<span class="text--preset-4-medium">Previous</span>
+						</button>
+
+						<span class="text--preset-5-medium card-number">Card 1 of 40</span>
+
+						<button class="btn btn--border" type="button">
+							<span class="text--preset-4-medium">Next</span>
+							<img
+								src="./assets/images/icon-chevron-right.svg"
+								role="presentation"
+								alt=""
+							/>
+						</button>
+					</nav>
 				</div>
 
 				<aside class="statistics-section" aria-labelledby="stats-heading">

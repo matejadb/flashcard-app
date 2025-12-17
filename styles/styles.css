@@ -12,4 +12,126 @@
 	grid-template-columns: 1fr auto;
 	gap: 3.2rem;
 }
+
+/* FLASHCARD SECTION */
+
+.flashcard-section {
+	border-radius: 16px;
+	border-top: 1px solid var(--neutral-900);
+	border-right: 3px solid var(--neutral-900);
+	border-bottom: 3px solid var(--neutral-900);
+	border-left: 1px solid var(--neutral-900);
+}
+
+.flashcard-section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 2rem;
+}
+
+.category-filter {
+	display: flex;
+	align-items: center;
+	gap: 1.6rem;
+}
+
+.mastered-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.mastered-controls label {
+	color: var(--neutral-900);
+	user-select: none;
+}
+
+.flashcard-container {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	padding: 2rem;
+}
+
+.flashcard-content {
+	min-height: 36rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	padding: 2.4rem;
+	border-radius: 16px;
+	border: 2px solid var(--neutral-900);
+	box-shadow: 2px 2px 0 0 var(--neutral-900);
+	background: url('../assets/images/pattern-flashcard-bg.svg'), var(--pink-400);
+}
+
+.flashcard-tag {
+	padding: 6px 1.2rem;
+	border: 1px solid var(--neutral-900);
+	border-radius: 999px;
+	color: var(--neutral-900);
+	background-color: var(--neutral-0);
+	box-shadow: 1 1 0 0 #000;
+}
+
+.question-container {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	gap: 1.6rem;
+}
+
+.question-text,
+.reveal-answer {
+	color: var(--neutral-900);
+}
+
+.reveal-answer {
+	user-select: none;
+}
+
+.reveal-answer:hover {
+	cursor: pointer;
+	color: var(--neutral-600);
+}
+
+.progress-container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.progress-bar {
+	min-width: 6rem;
+	height: 8px;
+	border-radius: 999px;
+	border: 1px solid var(--neutral-900);
+	background-color: var(--neutral-0);
+}
+
+.progress-level {
+	color: var(--neutral-900);
+}
+
+.flashcard-actions {
+	display: flex;
+	align-self: center;
+	gap: 2rem;
+}
+
+.navigation-controls {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 2rem;
+}
+
+.card-number {
+	color: var(--neutral-600);
+}
 /*------------------------------------------*/
