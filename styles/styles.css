@@ -21,6 +21,7 @@
 	border-right: 3px solid var(--neutral-900);
 	border-bottom: 3px solid var(--neutral-900);
 	border-left: 1px solid var(--neutral-900);
+	background-color: var(--neutral-0);
 }
 
 .flashcard-section-header {
@@ -82,6 +83,7 @@
 	flex: 1;
 	align-items: center;
 	justify-content: center;
+	text-align: center;
 	width: 100%;
 	gap: 1.6rem;
 }
@@ -133,5 +135,78 @@
 
 .card-number {
 	color: var(--neutral-600);
+}
+
+/* STATISTIS SECTION */
+.statistics-section {
+	display: flex;
+	flex-direction: column;
+	gap: 1.6rem;
+	padding: 2.4rem;
+	border-top: 1px solid var(--neutral-900);
+	border-right: 3px solid var(--neutral-900);
+	border-bottom: 3px solid var(--neutral-900);
+	border-left: 1px solid var(--neutral-900);
+	border-radius: 16px;
+	background-color: var(--neutral-0);
+}
+
+#stats-heading {
+	color: var(--neutral-900);
+}
+
+.statistics-content {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.statistics-card {
+	display: flex;
+	border-top: 1px solid var(--neutral-900);
+	border-right: 2px solid var(--neutral-900);
+	border-bottom: 2px solid var(--neutral-900);
+	border-left: 1px solid var(--neutral-900);
+	border-radius: 12px;
+	background-color: var(--neutral-0);
+	overflow: hidden;
+}
+
+.text-container {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 24.4rem;
+	padding: 2rem;
+}
+
+.text-container h3,
+.text-container span {
+	color: var(--neutral-900);
+}
+
+.icon-container {
+	display: flex;
+	align-items: center;
+	border-left: 1px solid var(--neutral-900);
+	justify-content: center;
+	min-width: 10rem;
+}
+
+.total {
+	background-color: var(--blue-400);
+}
+
+.mastered {
+	background-color: var(--teal-400);
+}
+
+.in-progress {
+	background-color: var(--pink-500);
+}
+
+.not-started {
+	background-color: var(--pink-400);
 }
 /*------------------------------------------*/
