@@ -3,12 +3,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="32x32"
 			href="./assets/images/favicon-32x32.png"
+		/>
+		<link rel="stylesheet" href="./styles/general.css" />
+		<link rel="stylesheet" href="./styles/styles.css" />
+		<link rel="stylesheet" href="./styles/queries.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
 		/>
 
 		<title>Frontend Mentor | Flashcard app</title>
@@ -28,7 +36,7 @@
 					role="tab"
 					id="study-tab"
 					aria-controls="study-mode-panel"
-					class="tab"
+					class="tab tab--current"
 					type="button"
 					aria-selected="true"
 				>
@@ -48,180 +56,186 @@
 		</header>
 
 		<main>
-			<div
+			<section
 				id="study-mode-panel"
 				role="tabpanel"
 				aria-labelledby="study-tab"
-				class="flashcard-section"
 			>
-				<header class="flashcard-section-header">
-					<div class="flashcard-controls">
-						<div class="category-filter">
-							<!-- will be dropdown -->
-							<button
-								aria-expanded="false"
-								aria-haspopup="listbox"
-								type="button"
-							>
-								<span>All Categories</span>
+				<div class="flashcard-section">
+					<header class="flashcard-section-header">
+						<div class="flashcard-controls">
+							<div class="category-filter">
+								<!-- will be dropdown -->
+								<button
+									class="btn btn--border"
+									aria-expanded="false"
+									aria-haspopup="listbox"
+									type="button"
+								>
+									<span>All Categories</span>
+									<img
+										src="./assets/images/icon-chevron-down.svg"
+										role="presentation"
+										alt=""
+									/>
+								</button>
+
+								<input
+									type="checkbox"
+									id="hide-mastered"
+									class="hide-mastered"
+								/>
+								<label for="hide-mastered">Hide Mastered</label>
+							</div>
+
+							<button class="btn btn--border" type="button">
 								<img
-									src="./assets/images/icon-chevron-down.svg"
+									src="./assets/images/icon-shuffle.svg"
+									role="presentation"
+									alt=""
+								/>
+								<span>Shuffle</span>
+							</button>
+						</div>
+					</header>
+					<hr />
+
+					<div class="flashcard-container">
+						<article class="flashcard-content" aria-live="polite">
+							<span class="flashcard-tag">Web Development</span>
+
+							<div class="question-container">
+								<h2>What does HTML stand for?</h2>
+								<p>Click to reveal answer</p>
+							</div>
+
+							<div class="progress-container">
+								<div
+									role="progressbar"
+									aria-valuenow="0"
+									aria-valuemin="0"
+									aria-valuemax="5"
+									aria-label="Question progress"
+									class="progress-bar"
+								></div>
+								<span>0/5</span>
+							</div>
+						</article>
+
+						<div class="flashcard-actions">
+							<button class="btn btn--primary" type="button">
+								<img
+									src="./assets/images/icon-circle-check.svg"
+									role="presentation"
+									alt=""
+								/>
+								<span>I Know This</span>
+							</button>
+
+							<button class="btn btn--secondary" type="button">
+								<img
+									src="./assets/images/icon-reset.svg"
+									role="presentation"
+									alt=""
+								/>
+								<span>Reset Progress</span>
+							</button>
+						</div>
+						<hr />
+
+						<nav aria-label="Flashcard navigation" class="navigation-controls">
+							<button class="btn btn--border" type="button">
+								<img
+									src="./assets/images/icon-chevron-left.svg"
+									role="presentation"
+									alt=""
+								/>
+								<span>Previous</span>
+							</button>
+
+							<span>Card 1 of 40</span>
+
+							<button class="btn btn--border" type="button">
+								<span>Next</span>
+								<img
+									src="./assets/images/icon-chevron-right.svg"
 									role="presentation"
 									alt=""
 								/>
 							</button>
-
-							<input type="checkbox" id="hide-mastered" class="hide-mastered" />
-							<label for="hide-mastered">Hide Mastered</label>
-						</div>
-
-						<button type="button">
-							<img
-								src="./assets/images/icon-shuffle.svg"
-								role="presentation"
-								alt=""
-							/>
-							<span>Shuffle</span>
-						</button>
-					</div>
-				</header>
-				<hr />
-
-				<div class="flashcard-container">
-					<article class="flashcard-content">
-						<span class="flashcard-tag">Web Development</span>
-
-						<div class="question-container">
-							<h2>What does HTML stand for?</h2>
-							<p>Click to reveal answer</p>
-						</div>
-
-						<div class="progress-container">
-							<div
-								role="progressbar"
-								aria-valuenow="0"
-								aria-valuemin="0"
-								aria-valuemax="5"
-								aria-label="Question progress"
-								class="progress-bar"
-							></div>
-							<span>0/5</span>
-						</div>
-					</article>
-
-					<div class="flashcard-actions">
-						<button type="button">
-							<img
-								src="./assets/images/icon-circle-check.svg"
-								role="presentation"
-								alt=""
-							/>
-							<span>I Know This</span>
-						</button>
-
-						<button type="button">
-							<img
-								src="./assets/images/icon-reset.svg"
-								role="presentation"
-								alt=""
-							/>
-							<span>Reset Progress</span>
-						</button>
-					</div>
-					<hr />
-
-					<nav aria-label="Flashcard navigation" class="navigation-controls">
-						<button type="button">
-							<img
-								src="./assets/images/icon-chevron-left.svg"
-								role="presentation"
-								alt=""
-							/>
-							<span>Previous</span>
-						</button>
-
-						<span>Card 1 of 40</span>
-
-						<button type="button">
-							<span>Next</span>
-							<img
-								src="./assets/images/icon-chevron-right.svg"
-								role="presentation"
-								alt=""
-							/>
-						</button>
-					</nav>
-				</div>
-			</div>
-
-			<section class="statistics-section">
-				<h3>Study Statistics</h3>
-
-				<div class="statistics-content">
-					<div class="statistics-card">
-						<div class="text-container">
-							<h4>Total Cards</h4>
-							<span>40</span>
-						</div>
-						<div class="icon-container">
-							<img
-								src="./assets/images/icon-stats-total.svg"
-								role="presentation"
-								alt=""
-							/>
-						</div>
-					</div>
-
-					<div class="statistics-card">
-						<div class="text-container">
-							<h4>Mastered</h4>
-							<span>11</span>
-						</div>
-						<div class="icon-container">
-							<img
-								src="./assets/images/icon-stats-mastered.svg"
-								role="presentation"
-								alt=""
-							/>
-						</div>
-					</div>
-
-					<div class="statistics-card">
-						<div class="text-container">
-							<h4>In Progress</h4>
-							<span>21</span>
-						</div>
-						<div class="icon-container">
-							<img
-								src="./assets/images/icon-stats-in-progress.svg"
-								role="presentation"
-								alt=""
-							/>
-						</div>
-					</div>
-
-					<div class="statistics-card">
-						<div class="text-container">
-							<h4>Not Started</h4>
-							<span>8</span>
-						</div>
-						<div class="icon-container">
-							<img
-								src="./assets/images/icon-stats-not-started.svg"
-								role="presentation"
-								alt=""
-							/>
-						</div>
+						</nav>
 					</div>
 				</div>
+
+				<aside class="statistics-section" aria-labelledby="stats-heading">
+					<h2 id="stats-heading">Study Statistics</h2>
+
+					<div class="statistics-content">
+						<div class="statistics-card">
+							<div class="text-container">
+								<h3>Total Cards</h3>
+								<span>40</span>
+							</div>
+							<div class="icon-container">
+								<img
+									src="./assets/images/icon-stats-total.svg"
+									role="presentation"
+									alt=""
+								/>
+							</div>
+						</div>
+
+						<div class="statistics-card">
+							<div class="text-container">
+								<h3>Mastered</h3>
+								<span>11</span>
+							</div>
+							<div class="icon-container">
+								<img
+									src="./assets/images/icon-stats-mastered.svg"
+									role="presentation"
+									alt=""
+								/>
+							</div>
+						</div>
+
+						<div class="statistics-card">
+							<div class="text-container">
+								<h3>In Progress</h3>
+								<span>21</span>
+							</div>
+							<div class="icon-container">
+								<img
+									src="./assets/images/icon-stats-in-progress.svg"
+									role="presentation"
+									alt=""
+								/>
+							</div>
+						</div>
+
+						<div class="statistics-card">
+							<div class="text-container">
+								<h3>Not Started</h3>
+								<span>8</span>
+							</div>
+							<div class="icon-container">
+								<img
+									src="./assets/images/icon-stats-not-started.svg"
+									role="presentation"
+									alt=""
+								/>
+							</div>
+						</div>
+					</div>
+				</aside>
 			</section>
 
-			<div
+			<section
 				id="all-cards-panel"
 				role="tabpanel"
 				aria-labelledby="all-cards-tab"
 				hidden
-			></div>
+			></section>
 		</main>
 	</body>
 </html>
