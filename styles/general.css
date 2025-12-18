@@ -267,6 +267,7 @@ FOR MOBILE
 }
 
 .tab--current {
+	border: 1px solid var(--neutral-900);
 	background-color: var(--yellow-500);
 }
 
