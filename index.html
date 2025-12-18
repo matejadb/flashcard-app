@@ -61,7 +61,7 @@
 					id="study-mode-panel"
 					role="tabpanel"
 					aria-labelledby="study-tab"
-					class="study-mode-content"
+					class="hidden study-mode-content"
 				>
 					<div class="flashcard-section">
 						<header class="flashcard-section-header">
@@ -297,8 +297,79 @@
 					role="tabpanel"
 					aria-labelledby="all-cards-tab"
 					class="all-cards-content"
-					hidden
-				></section>
+				>
+					<form class="form--new-card">
+						<div class="new-card--input">
+							<div class="input">
+								<label for="new-question" class="text--preset-4-medium"
+									>Question</label
+								>
+								<input
+									type="text"
+									id="new-question"
+									name="new-question"
+									class="text--preset-4-regular"
+									placeholder="e.g, What is the capital of France?"
+								/>
+								<div class="input--error">
+									<img
+										src="./assets/images/icon-error.svg"
+										role="presentation"
+										alt=""
+									/>
+									<p class="text--preset-5-regular">Please enter a question.</p>
+								</div>
+							</div>
+							<div class="input">
+								<label for="new-answer" class="text--preset-4-medium"
+									>Answer</label
+								>
+								<textarea
+									name="new-answer"
+									id="new-answer"
+									class="text--preset-4-regular"
+									placeholder="e.g, Paris"
+								></textarea>
+								<div class="input--error">
+									<img
+										src="./assets/images/icon-error.svg"
+										role="presentation"
+										alt=""
+									/>
+									<p class="text--preset-5-regular">Please enter an answer.</p>
+								</div>
+							</div>
+							<div class="input">
+								<label for="new-category" class="text--preset-4-medium"
+									>Category</label
+								>
+								<input
+									type="text"
+									id="new-category"
+									name="new-category"
+									class="text--preset-4-regular"
+									placeholder="e.g, Geography"
+								/>
+							</div>
+							<div class="input--error">
+								<img
+									src="./assets/images/icon-error.svg"
+									role="presentation"
+									alt=""
+								/>
+								<p class="text--preset-5-regular">Please enter a category.</p>
+							</div>
+						</div>
+						<button type="submit" class="btn btn--primary btn--create-card">
+							<img
+								src="./assets/images/icon-circle-plus.svg"
+								role="presentation"
+								alt=""
+							/>
+							<span class="text--preset-4-semi">Create Card</span>
+						</button>
+					</form>
+				</section>
 			</main>
 		</div>
 	</body>

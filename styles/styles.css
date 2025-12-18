@@ -237,6 +237,61 @@
 }
 /*------------------------------------------*/
 
+/*--------------ALL CARDS MODE--------------*/
+.all-cards-content {
+	display: flex;
+	flex-direction: column;
+	gap: 3.2rem;
+}
+
+.form--new-card {
+	display: flex;
+	flex-direction: column;
+	gap: 2.4rem;
+	padding: 3.2rem;
+	border-top: 1px solid var(--neutral-900);
+	border-right: 4px solid var(--neutral-900);
+	border-bottom: 4px solid var(--neutral-900);
+	border-left: 1px solid var(--neutral-900);
+	border-radius: 16px;
+	background-color: var(--neutral-0);
+}
+
+.new-card--input {
+	display: flex;
+	flex-direction: column;
+	gap: 1.6rem;
+}
+
+.input {
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+	color: var(--neutral-900);
+}
+
+.input textarea {
+	height: 10rem;
+	resize: none;
+}
+
+.input--error {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.input--error p {
+	color: var(--pink-700);
+}
+
+.btn--create-card {
+	display: flex;
+	align-self: flex-start;
+}
+
+/*------------------------------------------*/
+
 .hidden {
 	display: none;
 }

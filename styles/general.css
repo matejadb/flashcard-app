@@ -81,6 +81,26 @@ hr {
 	border: none;
 }
 
+input,
+textarea {
+	padding: 1.6rem;
+	border: 1px solid var(--neutral-900);
+	border-radius: 6px;
+	color: var(--neutral-600);
+}
+
+input:hover,
+textarea:hover {
+	box-shadow: 2px 2px 0 0 var(--neutral-900);
+}
+
+input:focus,
+textarea:focus {
+	outline: none;
+	border: 1px solid var(--blue-600);
+	box-shadow: 2px 2px 0 0 var(--blue-600);
+}
+
 .main-container {
 	display: flex;
 	flex-direction: column;
