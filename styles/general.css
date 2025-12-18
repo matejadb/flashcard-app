@@ -69,10 +69,9 @@ html {
 }
 
 body {
-	display: flex;
-	flex-direction: column;
-	gap: 3.2rem;
+	height: 100vh;
 	padding: 2.4rem 10rem;
+
 	background-color: var(--neutral-100);
 }
 
@@ -80,6 +79,14 @@ hr {
 	height: 1px;
 	background-color: var(--neutral-900);
 	border: none;
+}
+
+.main-container {
+	display: flex;
+	flex-direction: column;
+	gap: 3.2rem;
+	margin: 0 auto;
+	max-width: 124rem;
 }
 
 /*-------------------TEXT-------------------*/
