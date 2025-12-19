@@ -290,6 +290,12 @@
 	align-self: flex-start;
 }
 
+.all-cards-section-controls {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
 /*------------------------------------------*/
 
 .hidden {
