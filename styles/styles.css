@@ -296,6 +296,18 @@
 	justify-content: space-between;
 }
 
+.flashcard-container--all-cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2.4rem;
+}
+
+.question-container--all-cards {
+}
+
+.answer-container--all-cards {
+}
+
 /*------------------------------------------*/
 
 .hidden {
