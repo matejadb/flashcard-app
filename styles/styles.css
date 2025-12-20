@@ -48,6 +48,10 @@
 	user-select: none;
 }
 
+.mastered-controls label:hover {
+	cursor: pointer;
+}
+
 .flashcard-container {
 	display: flex;
 	flex-direction: column;
