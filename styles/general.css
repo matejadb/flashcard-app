@@ -110,6 +110,31 @@ textarea:focus {
 	max-width: 124rem;
 }
 
+.categories-dropdown {
+}
+
+.categories-dropdown--content {
+	position: absolute;
+	min-width: 26rem;
+	margin-top: 1rem;
+	background-color: var(--neutral-0);
+	border-radius: 8px;
+	border: 1px solid var(--neutral-900);
+	box-shadow: 0 3px 8px 0 var(--neutral-900);
+	overflow: hidden;
+	z-index: 10;
+}
+
+.categories-dropdown--content div {
+	display: flex;
+	gap: 8px;
+	padding: 8px 16px;
+}
+
+.categories-dropdown--content div:hover {
+	cursor: pointer;
+	background-color: var(--neutral-100);
+}
 /*-------------------TEXT-------------------*/
 .text--preset-1 {
 	font-family: 'Poppins', sans-serif;
