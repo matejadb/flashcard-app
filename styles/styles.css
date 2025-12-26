@@ -59,6 +59,10 @@
 	padding: 2rem;
 }
 
+.flashcard-container:hover {
+	cursor: pointer;
+}
+
 .flashcard-content-question,
 .flashcard-content-answer {
 	position: relative;
@@ -93,6 +97,11 @@
 .flashcard-icon--bottom-left {
 	bottom: 5rem;
 	left: 3rem;
+}
+
+.flashcard-icon--bottom-left-answer {
+	bottom: 5rem;
+	left: 2rem;
 }
 
 .flashcard-tag {

@@ -9,6 +9,7 @@ const studyModeBtn = document.querySelector('.tab--study-mode');
 const allCardsBtn = document.querySelector('.tab--all-cards');
 const studyMode = document.querySelector('.study-mode-content');
 const allCards = document.querySelector('.all-cards-content');
+const revealAnswer = document.querySelector('.flashcard-container');
 
 /* FUNCTIONS */
 function selectStudyMode() {
@@ -61,6 +62,16 @@ function closeDropdowns(event) {
 	});
 }
 
+function reveal() {
+	document
+		.querySelector('.flashcard-content-question')
+		.classList.toggle('hidden');
+
+	document
+		.querySelector('.flashcard-content-answer')
+		.classList.toggle('hidden');
+}
+
 /* EVENT LISTENERS */
 categoryDropdownBtns.forEach((btn) => {
 	btn.addEventListener('click', toggleCategoryDropdown);
@@ -71,3 +82,5 @@ document.addEventListener('click', closeDropdowns);
 studyModeBtn.addEventListener('click', selectStudyMode);
 
 allCardsBtn.addEventListener('click', selectAllCards);
+
+revealAnswer.addEventListener('click', reveal);
