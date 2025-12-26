@@ -110,9 +110,6 @@ textarea:focus {
 	max-width: 124rem;
 }
 
-.categories-dropdown {
-}
-
 .categories-dropdown--content {
 	position: absolute;
 	min-width: 26rem;

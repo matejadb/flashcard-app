@@ -37,7 +37,7 @@
 						role="tab"
 						id="study-tab"
 						aria-controls="study-mode-panel"
-						class="tab tab--current text--preset-4-semi"
+						class="tab tab--current tab--study-mode text--preset-4-semi"
 						type="button"
 						aria-selected="true"
 					>
@@ -47,7 +47,7 @@
 						role="tab"
 						id="all-cards-tab"
 						aria-controls="all-cards-panel"
-						class="tab text--preset-4-semi"
+						class="tab tab--all-cards text--preset-4-semi"
 						type="button"
 						aria-selected="false"
 					>
@@ -66,7 +66,6 @@
 					<div class="flashcard-section">
 						<header class="flashcard-section-header">
 							<div class="category-filter">
-								<!-- will be dropdown -->
 								<div class="categories-dropdown">
 									<button
 										class="btn btn--border category-btn"
@@ -412,20 +411,60 @@
 
 					<div class="all-cards-section-controls">
 						<div class="category-filter">
-							<!-- will be dropdown -->
-							<button
-								class="btn btn--border"
-								aria-expanded="false"
-								aria-haspopup="listbox"
-								type="button"
-							>
-								<span class="text--preset-4-medium">All Categories</span>
-								<img
-									src="./assets/images/icon-chevron-down.svg"
-									role="presentation"
-									alt=""
-								/>
-							</button>
+							<div class="categories-dropdown">
+								<button
+									class="btn btn--border category-btn"
+									aria-expanded="false"
+									aria-haspopup="listbox"
+									type="button"
+								>
+									<span class="text--preset-4-medium">All Categories</span>
+									<img
+										src="./assets/images/icon-chevron-down.svg"
+										role="presentation"
+										alt=""
+									/>
+								</button>
+								<div
+									id="category-menu"
+									role="menu"
+									aria-labelledby="category-button"
+									class="categories-dropdown--content hidden"
+								>
+									<div
+										role="menuitemcheckbox"
+										aria-checked="false"
+										tabindex="0"
+									>
+										<input type="checkbox" id="cat-art" />
+										<label for="cat-art" class="text--preset-5-medium"
+											>Art (1)</label
+										>
+									</div>
+									<hr />
+									<div
+										role="menuitemcheckbox"
+										aria-checked="false"
+										tabindex="0"
+									>
+										<input type="checkbox" id="cat-css" />
+										<label for="cat-css" class="text--preset-5-medium"
+											>CSS (6)</label
+										>
+									</div>
+									<hr />
+									<div
+										role="menuitemcheckbox"
+										aria-checked="false"
+										tabindex="0"
+									>
+										<input type="checkbox" id="cat-geography" />
+										<label for="cat-geography" class="text--preset-5-medium"
+											>Geography (4)</label
+										>
+									</div>
+								</div>
+							</div>
 
 							<div class="mastered-controls">
 								<input
