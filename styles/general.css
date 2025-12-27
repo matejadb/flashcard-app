@@ -95,11 +95,28 @@ textarea:hover {
 	box-shadow: 2px 2px 0 0 var(--neutral-900);
 }
 
-input:focus,
-textarea:focus {
+input:focus-visible,
+textarea:focus-visible {
 	outline: none;
 	border: 1px solid var(--blue-600);
 	box-shadow: 2px 2px 0 0 var(--blue-600);
+}
+
+input[type='checkbox'] {
+	appearance: none;
+	padding: 0;
+	width: 1.6rem;
+	height: 1.6rem;
+	border-radius: 4px;
+	border: 1px solid var(--neutral-900);
+}
+
+input[type='checkbox']:checked {
+	background-color: var(--yellow-500);
+	background-image: url('../assets/images/icon-check.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 70%;
 }
 
 .main-container {
@@ -124,12 +141,12 @@ textarea:focus {
 
 .categories-dropdown--content div {
 	display: flex;
+	align-items: center;
 	gap: 8px;
 	padding: 8px 16px;
 }
 
 .categories-dropdown--content div:hover {
-	cursor: pointer;
 	background-color: var(--neutral-100);
 }
 /*-------------------TEXT-------------------*/
@@ -239,8 +256,8 @@ FOR MOBILE
 	box-shadow: 4px 4px 0 0 var(--neutral-900);
 }
 
-.btn--primary:focus:not([disabled]),
-.btn--secondary:focus {
+.btn--primary:focus-visible:not([disabled]),
+.btn--secondary:focus-visible {
 	outline: none;
 	box-shadow: 3px 3px 0 0 var(--blue-600);
 }
@@ -250,7 +267,7 @@ FOR MOBILE
 	background-color: var(--neutral-100);
 }
 
-.btn--border:focus {
+.btn--border:focus-visible {
 	outline: 2px solid var(--blue-600);
 	outline-offset: 2px;
 }
@@ -303,7 +320,7 @@ FOR MOBILE
 	border: 1px solid var(--neutral-900);
 }
 
-.tab:focus {
+.tab:focus-visible {
 	outline: 2px solid var(--blue-600);
 	outline-offset: 2px;
 	border: 1px solid var(--neutral-900);
