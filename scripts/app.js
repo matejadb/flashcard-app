@@ -9,7 +9,7 @@ const studyModeBtn = document.querySelector('.tab--study-mode');
 const allCardsBtn = document.querySelector('.tab--all-cards');
 const studyMode = document.querySelector('.study-mode-content');
 const allCards = document.querySelector('.all-cards-content');
-const revealAnswer = document.querySelector('.flashcard-container');
+const revealAnswer = document.querySelector('.flashcard-content');
 
 /* FUNCTIONS */
 function selectStudyMode() {

@@ -59,7 +59,7 @@
 	padding: 2rem;
 }
 
-.flashcard-container:hover {
+.flashcard-content:hover {
 	cursor: pointer;
 }
 
