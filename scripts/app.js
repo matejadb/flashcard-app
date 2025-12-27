@@ -3,7 +3,14 @@ const categoryDropdownBtns = document.querySelectorAll('.category-btn');
 const categoryDropdownContents = document.querySelectorAll(
 	'.categories-dropdown--content'
 );
+const menuDropdownBtns = document.querySelectorAll('.menu-btn');
+const menuDropdownContents = document.querySelectorAll(
+	'.menu-dropdown--content'
+);
+
 const categoriesDropdowns = document.querySelectorAll('.categories-dropdown');
+const menuDropdowns = document.querySelectorAll('.menu-container');
+
 const tablist = document.querySelector('.tablist');
 const studyModeBtn = document.querySelector('.tab--study-mode');
 const allCardsBtn = document.querySelector('.tab--all-cards');
@@ -48,6 +55,17 @@ function toggleCategoryDropdown(event) {
 	btn.setAttribute('aria-expanded', isExpanded);
 }
 
+function toggleMenuDropdown(event) {
+	event.stopPropagation();
+	const btn = event.currentTarget;
+	const menuContainer = btn.closest('.menu-container');
+	const dropdown = menuContainer.querySelector('.menu-dropdown--content');
+
+	dropdown.classList.toggle('hidden');
+	const isExpanded = !dropdown.classList.contains('hidden');
+	btn.setAttribute('aria-expanded', isExpanded);
+}
+
 function closeDropdowns(event) {
 	event.stopPropagation();
 	categoriesDropdowns.forEach((dropdown) => {
@@ -55,6 +73,16 @@ function closeDropdowns(event) {
 			'.categories-dropdown--content'
 		);
 		const dropdownBtn = dropdown.querySelector('.category-btn');
+		if (!dropdown.contains(event.target)) {
+			dropdownContent.classList.add('hidden');
+			dropdownBtn.setAttribute('aria-expanded', false);
+		}
+	});
+
+	menuDropdowns.forEach((dropdown) => {
+		const dropdownContent = dropdown.querySelector('.menu-dropdown--content');
+
+		const dropdownBtn = dropdown.querySelector('.menu-btn');
 		if (!dropdown.contains(event.target)) {
 			dropdownContent.classList.add('hidden');
 			dropdownBtn.setAttribute('aria-expanded', false);
@@ -75,6 +103,9 @@ function reveal() {
 /* EVENT LISTENERS */
 categoryDropdownBtns.forEach((btn) => {
 	btn.addEventListener('click', toggleCategoryDropdown);
+});
+menuDropdownBtns.forEach((btn) => {
+	btn.addEventListener('click', toggleMenuDropdown);
 });
 
 document.addEventListener('click', closeDropdowns);
