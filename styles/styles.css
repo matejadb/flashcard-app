@@ -199,6 +199,22 @@
 	background-color: var(--neutral-900);
 }
 
+.bar {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.card-mastered {
+	display: flex;
+	gap: 6px;
+	padding: 6px 12px;
+	border-radius: 999px;
+	border: 1px solid var(--neutral-900);
+	box-shadow: 1px 1px 0 0 var(--neutral-900);
+	background-color: var(--teal-400);
+}
+
 .progress-level {
 	color: var(--neutral-900);
 }
