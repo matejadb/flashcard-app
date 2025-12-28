@@ -356,3 +356,11 @@ FOR MOBILE
 	box-shadow: 2px 2px 0 0 var(--neutral-900);
 }
 /*------------------------------------------*/
+
+/*---------------PROGRESS BAR---------------*/
+.progress-bar--1 {
+	width: 20%;
+	background-color: var(--neutral-900);
+}
+
+/*------------------------------------------*/

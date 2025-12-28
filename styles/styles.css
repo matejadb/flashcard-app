@@ -387,12 +387,16 @@
 .menu-icon {
 	display: flex;
 	align-items: center;
-	border: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
 	background-color: transparent;
 }
 
 .menu-icon:hover {
 	cursor: pointer;
+	background-color: var(--neutral-0);
+	border: 1px solid var(--neutral-900);
+	box-shadow: 2px 2px 0 0 var(--neutral-900);
 }
 
 .pagination {
