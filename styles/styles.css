@@ -171,8 +171,8 @@
 	top: 0;
 	left: 0;
 	height: 100%;
-	width: 0%; /* Start at 0 */
-	background-color: var(--teal-400); /* Or whatever color */
+	width: 0%;
+	background-color: var(--neutral-0);
 	transition: width 0.3s ease-out;
 }
 
