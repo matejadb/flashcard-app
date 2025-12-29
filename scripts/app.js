@@ -10,17 +10,146 @@ class FlashcardTracker {
 
 	/* Public Methods */
 
-	addCard(card) {}
+	addCard(card) {
+		this._flashcards.push(card);
+		this._totalCards++;
+		this._totalNotStarted++;
+
+		if (!this._categories.includes(card.category.toLowerCase())) {
+			this._categories.push(card.category);
+		}
+
+		this._displayNewCardAll(card);
+		this._render();
+	}
 
 	removeCard(id) {}
+
+	/* Private Methods */
+
+	_displayTotalCards() {
+		const totalCardsEl = document.querySelector('.cards--total');
+		totalCardsEl.textContent = this._totalCards;
+	}
+
+	_displayTotalMastered() {
+		const totalMasteredEl = document.querySelector('.cards--mastered');
+		totalMasteredEl.textContent = this._totalMastered;
+	}
+
+	_displayTotalInProgress() {
+		const totalInProgressEl = document.querySelector('.cards--in-progress');
+		totalInProgressEl.textContent = this._totalInProgress;
+	}
+
+	_displayTotalNotStarted() {
+		const totalNotStartedEl = document.querySelector('.cards--not-started');
+		totalNotStartedEl.textContent = this._totalNotStarted;
+	}
+
+	_displayNewCardAll(card) {
+		const cardsEl = document.querySelector('.flashcard-container--all-cards');
+		const cardEl = document.createElement('div');
+		cardEl.classList.add('flashcard');
+		cardEl.setAttribute('data-id', card.id);
+
+		cardEl.innerHTML = `<div class="question-container--all-cards">
+								<h4 class="text--preset-3">${card.question}</h4>
+							</div>
+							<div class="answer-container--all-cards">
+								<span class="text--preset-5-medium">Answer:</span>
+								<p class="text--preset-5-medium">${card.answer}</p>
+							</div>
+							<div class="flashcard--footer">
+								<div class="tag-container">
+									<span class="flashcard-tag text--preset-6"
+										>${card.category}</span
+									>
+								</div>
+								<div class="progress-bar-container">
+									<div class="bar ">
+										<div
+											role="progressbar"
+											aria-valuenow="0"
+											aria-valuemin="0"
+											aria-valuemax="5"
+											aria-label="Question progress"
+											class="progress-bar progress-bar--in-progress"
+											data-progress="0"
+										></div>
+										<span class="progress-level text--preset-6">0/5</span>
+									</div>
+									<div class="card-mastered hidden">
+										<img
+											src="./assets/images/icon-mastered.svg"
+											role="presentation"
+											alt=""
+										/>
+										<span class="progress-level text--preset-6">Mastered</span>
+										<span class="progress-level text--preset-6">5/5</span>
+									</div>
+								</div>
+
+								<div class="menu-container">
+									<div class="card-menu--dropdown">
+										<div
+											id="card-menu"
+											role="menu"
+											aria-labelledby="menu-button"
+											class="menu-dropdown--content hidden"
+										>
+											<div role="menuitem" aria-checked="false" tabindex="0">
+												<img
+													src="./assets/images/icon-edit.svg"
+													role="presentation"
+													alt=""
+												/>
+												<span class="text--preset-5-medium">Edit</span>
+											</div>
+											<hr />
+											<div role="menuitem" aria-checked="false" tabindex="0">
+												<img
+													src="./assets/images/icon-delete.svg"
+													role="presentation"
+													alt=""
+												/>
+												<span class="text--preset-5-medium">Delete</span>
+											</div>
+											<hr />
+										</div>
+									</div>
+									<button
+										class="menu-icon menu-btn"
+										aria-expanded="false"
+										aria-haspopup="menu"
+										type="button"
+									>
+										<img
+											class="card-menu"
+											src="./assets/images/icon-menu.svg"
+											alt="Card menu button"
+										/>
+									</button>
+								</div>
+							</div>`;
+
+		cardsEl.appendChild(cardEl);
+	}
+
+	_render() {
+		this._displayTotalCards();
+		this._displayTotalMastered();
+		this._displayTotalInProgress();
+		this._displayTotalNotStarted();
+	}
 }
 
 class Flashcard {
 	constructor(question, answer, category) {
 		this.id = Math.random().toString(16).slice(2);
-		this._question = question;
-		this._answer = answer;
-		this._category = category;
+		this.question = question;
+		this.answer = answer;
+		this.category = category;
 	}
 }
 
@@ -29,6 +158,25 @@ class App {
 		this._tracker = new FlashcardTracker();
 
 		this._loadEventListeners();
+	}
+
+	_newCard(e) {
+		e.preventDefault();
+
+		const question = document.getElementById('new-question');
+		const answer = document.getElementById('new-answer');
+		const category = document.getElementById('new-category');
+
+		if (!question.value || !answer.value || !category.value) {
+			return;
+		}
+		const card = new Flashcard(question.value, answer.value, category.value);
+
+		this._tracker.addCard(card);
+
+		question.value = '';
+		answer.value = '';
+		category.value = '';
 	}
 
 	_revealAnswer() {
@@ -93,9 +241,7 @@ class App {
 		btn.setAttribute('aria-expanded', isExpanded);
 	}
 
-	_toggleMenuDropdown(e) {
-		e.stopPropagation();
-		const btn = e.currentTarget;
+	_toggleMenuDropdown(btn) {
 		const menuContainer = btn.closest('.menu-container');
 		const dropdown = menuContainer.querySelector('.menu-dropdown--content');
 
@@ -134,12 +280,20 @@ class App {
 	}
 
 	_loadEventListeners() {
+		document
+			.querySelector('.form--new-card')
+			.addEventListener('submit', this._newCard.bind(this));
+
 		document.querySelectorAll('.category-btn').forEach((btn) => {
 			btn.addEventListener('click', this._toggleCategoryDropdown.bind(this));
 		});
 
-		document.querySelectorAll('.menu-btn').forEach((btn) => {
-			btn.addEventListener('click', this._toggleMenuDropdown.bind(this));
+		document.addEventListener('click', (e) => {
+			const menuBtn = e.target.closest('.menu-btn');
+			if (menuBtn) {
+				e.stopPropagation();
+				this._toggleMenuDropdown(menuBtn);
+			}
 		});
 
 		document
