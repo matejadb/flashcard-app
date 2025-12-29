@@ -20,6 +20,7 @@ class FlashcardTracker {
 		}
 
 		this._displayNewCardAll(card);
+		this._populateCategoryDropdown(card);
 		this._render();
 	}
 
@@ -62,7 +63,7 @@ class FlashcardTracker {
 							</div>
 							<div class="flashcard--footer">
 								<div class="tag-container">
-									<span class="flashcard-tag text--preset-6"
+									<span class="flashcard-tag count-cat text--preset-6"
 										>${card.category}</span
 									>
 								</div>
@@ -134,6 +135,50 @@ class FlashcardTracker {
 							</div>`;
 
 		cardsEl.appendChild(cardEl);
+	}
+
+	_populateCategoryDropdown(card) {
+		const categoriesEl = document.querySelectorAll(
+			'.categories-dropdown--content'
+		);
+
+		categoriesEl.forEach((el) => {
+			const cardCategory = this._formatCategoryName(card.category);
+
+			const divider = document.createElement('hr');
+			const categoryEl = document.createElement('div');
+			categoryEl.setAttribute('role', 'menuitemcheckbox');
+			categoryEl.setAttribute('aria-checked', false);
+			categoryEl.setAttribute('tabindex', 0);
+
+			categoryEl.innerHTML = `<input type="checkbox" id="cat-${cardCategory}" class="dropdown-element" />
+											<label for="cat-${this._formatCategoryName(
+												card.category
+											)}" class="text--preset-5-medium ${cardCategory}">
+												${card.category} (${this._getNumberOfCategoryType(card.category)})
+											</label>`;
+			el.append(divider, categoryEl);
+		});
+	}
+
+	_formatCategoryName(category) {
+		return category.split(' ').join('-').toLowerCase();
+	}
+
+	_getNumberOfCategoryType(category) {
+		const allCategoriesEl = document.querySelectorAll('.count-cat');
+		const typeCategoriesEl = Array.from(allCategoriesEl).filter(
+			(element) => element.textContent === category
+		);
+
+		return typeCategoriesEl.length;
+	}
+
+	_checkIfCategoryExists(category) {
+		const arr = this._getNumberOfCategoryType(category);
+
+		if (arr.length !== 0) {
+		}
 	}
 
 	_render() {
