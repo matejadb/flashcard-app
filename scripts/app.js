@@ -1,117 +1,161 @@
-/* GLOBAL */
-const categoryDropdownBtns = document.querySelectorAll('.category-btn');
-const categoryDropdownContents = document.querySelectorAll(
-	'.categories-dropdown--content'
-);
-const menuDropdownBtns = document.querySelectorAll('.menu-btn');
-const menuDropdownContents = document.querySelectorAll(
-	'.menu-dropdown--content'
-);
+class FlashcardTracker {
+	constructor() {
+		this._totalCards = 0;
+		this._totalMastered = 0;
+		this._totalInProgress = 0;
+		this._totalNotStarted = 0;
+		this._flashcards = [];
+		this._categories = [];
+	}
 
-const categoriesDropdowns = document.querySelectorAll('.categories-dropdown');
-const menuDropdowns = document.querySelectorAll('.menu-container');
+	/* Public Methods */
 
-const tablist = document.querySelector('.tablist');
-const studyModeBtn = document.querySelector('.tab--study-mode');
-const allCardsBtn = document.querySelector('.tab--all-cards');
-const studyMode = document.querySelector('.study-mode-content');
-const allCards = document.querySelector('.all-cards-content');
-const revealAnswer = document.querySelector('.flashcard-content');
+	addCard(card) {}
 
-/* FUNCTIONS */
-function selectStudyMode() {
-	tablist.querySelectorAll('button').forEach((btn) => {
-		btn.classList.remove('tab--current');
-		btn.setAttribute('aria-selected', false);
-	});
-
-	studyModeBtn.classList.add('tab--current');
-	studyModeBtn.setAttribute('aria-selected', true);
-
-	studyMode.classList.remove('hidden');
-	allCards.classList.add('hidden');
+	removeCard(id) {}
 }
 
-function selectAllCards() {
-	tablist.querySelectorAll('button').forEach((btn) => {
-		btn.classList.remove('tab--current');
-		btn.setAttribute('aria-selected', false);
-	});
-
-	allCardsBtn.classList.add('tab--current');
-	allCardsBtn.setAttribute('aria-selected', true);
-
-	allCards.classList.remove('hidden');
-	studyMode.classList.add('hidden');
+class Flashcard {
+	constructor(question, answer, category) {
+		this.id = Math.random().toString(16).slice(2);
+		this._question = question;
+		this._answer = answer;
+		this._category = category;
+	}
 }
 
-function toggleCategoryDropdown(event) {
-	event.stopPropagation();
-	const btn = event.currentTarget;
-	const dropdown = btn.nextElementSibling;
+class App {
+	constructor() {
+		this._tracker = new FlashcardTracker();
 
-	dropdown.classList.toggle('hidden');
-	const isExpanded = !dropdown.classList.contains('hidden');
-	btn.setAttribute('aria-expanded', isExpanded);
-}
+		this._loadEventListeners();
+	}
 
-function toggleMenuDropdown(event) {
-	event.stopPropagation();
-	const btn = event.currentTarget;
-	const menuContainer = btn.closest('.menu-container');
-	const dropdown = menuContainer.querySelector('.menu-dropdown--content');
+	_revealAnswer() {
+		document
+			.querySelector('.flashcard-content-question')
+			.classList.toggle('hidden');
 
-	dropdown.classList.toggle('hidden');
-	const isExpanded = !dropdown.classList.contains('hidden');
-	btn.setAttribute('aria-expanded', isExpanded);
-}
+		document
+			.querySelector('.flashcard-content-answer')
+			.classList.toggle('hidden');
+	}
 
-function closeDropdowns(event) {
-	event.stopPropagation();
-	categoriesDropdowns.forEach((dropdown) => {
-		const dropdownContent = dropdown.querySelector(
-			'.categories-dropdown--content'
+	_selectStudyMode() {
+		const studyModeContent = document.querySelector('.study-mode-content');
+		const allCardsContent = document.querySelector('.all-cards-content');
+
+		document
+			.querySelector('.tablist')
+			.querySelectorAll('button')
+			.forEach((btn) => {
+				btn.classList.remove('tab--current');
+				btn.setAttribute('aria-selected', false);
+			});
+
+		document.querySelector('.tab--study-mode').classList.add('tab--current');
+		document
+			.querySelector('.tab--study-mode')
+			.setAttribute('aria-selected', true);
+
+		studyModeContent.classList.remove('hidden');
+		allCardsContent.classList.add('hidden');
+	}
+
+	_selectAllCards() {
+		const allCardsContent = document.querySelector('.all-cards-content');
+		const studyModeContent = document.querySelector('.study-mode-content');
+
+		document
+			.querySelector('.tablist')
+			.querySelectorAll('button')
+			.forEach((btn) => {
+				btn.classList.remove('tab--current');
+				btn.setAttribute('aria-selected', false);
+			});
+
+		document.querySelector('.tab--all-cards').classList.add('tab--current');
+		document
+			.querySelector('.tab--all-cards')
+			.setAttribute('aria-selected', true);
+
+		allCardsContent.classList.remove('hidden');
+		studyModeContent.classList.add('hidden');
+	}
+
+	_toggleCategoryDropdown(e) {
+		e.stopPropagation();
+		const btn = e.currentTarget;
+		const dropdown = btn.nextElementSibling;
+
+		dropdown.classList.toggle('hidden');
+		const isExpanded = !dropdown.classList.contains('hidden');
+		btn.setAttribute('aria-expanded', isExpanded);
+	}
+
+	_toggleMenuDropdown(e) {
+		e.stopPropagation();
+		const btn = e.currentTarget;
+		const menuContainer = btn.closest('.menu-container');
+		const dropdown = menuContainer.querySelector('.menu-dropdown--content');
+
+		dropdown.classList.toggle('hidden');
+		const isExpanded = !dropdown.classList.contains('hidden');
+		btn.setAttribute('aria-expanded', isExpanded);
+	}
+
+	_closeDropdowns(event) {
+		const categoriesDropdowns = document.querySelectorAll(
+			'.categories-dropdown'
 		);
-		const dropdownBtn = dropdown.querySelector('.category-btn');
-		if (!dropdown.contains(event.target)) {
-			dropdownContent.classList.add('hidden');
-			dropdownBtn.setAttribute('aria-expanded', false);
-		}
-	});
+		const menuDropdowns = document.querySelectorAll('.menu-container');
 
-	menuDropdowns.forEach((dropdown) => {
-		const dropdownContent = dropdown.querySelector('.menu-dropdown--content');
+		event.stopPropagation();
+		categoriesDropdowns.forEach((dropdown) => {
+			const dropdownContent = dropdown.querySelector(
+				'.categories-dropdown--content'
+			);
+			const dropdownBtn = dropdown.querySelector('.category-btn');
+			if (!dropdown.contains(event.target)) {
+				dropdownContent.classList.add('hidden');
+				dropdownBtn.setAttribute('aria-expanded', false);
+			}
+		});
 
-		const dropdownBtn = dropdown.querySelector('.menu-btn');
-		if (!dropdown.contains(event.target)) {
-			dropdownContent.classList.add('hidden');
-			dropdownBtn.setAttribute('aria-expanded', false);
-		}
-	});
+		menuDropdowns.forEach((dropdown) => {
+			const dropdownContent = dropdown.querySelector('.menu-dropdown--content');
+
+			const dropdownBtn = dropdown.querySelector('.menu-btn');
+			if (!dropdown.contains(event.target)) {
+				dropdownContent.classList.add('hidden');
+				dropdownBtn.setAttribute('aria-expanded', false);
+			}
+		});
+	}
+
+	_loadEventListeners() {
+		document.querySelectorAll('.category-btn').forEach((btn) => {
+			btn.addEventListener('click', this._toggleCategoryDropdown.bind(this));
+		});
+
+		document.querySelectorAll('.menu-btn').forEach((btn) => {
+			btn.addEventListener('click', this._toggleMenuDropdown.bind(this));
+		});
+
+		document
+			.querySelector('.tab--study-mode')
+			.addEventListener('click', this._selectStudyMode.bind(this));
+
+		document
+			.querySelector('.tab--all-cards')
+			.addEventListener('click', this._selectAllCards.bind(this));
+
+		document.addEventListener('click', this._closeDropdowns.bind(this));
+
+		document
+			.querySelector('.flashcard-content')
+			.addEventListener('click', this._revealAnswer);
+	}
 }
 
-function reveal() {
-	document
-		.querySelector('.flashcard-content-question')
-		.classList.toggle('hidden');
-
-	document
-		.querySelector('.flashcard-content-answer')
-		.classList.toggle('hidden');
-}
-
-/* EVENT LISTENERS */
-categoryDropdownBtns.forEach((btn) => {
-	btn.addEventListener('click', toggleCategoryDropdown);
-});
-menuDropdownBtns.forEach((btn) => {
-	btn.addEventListener('click', toggleMenuDropdown);
-});
-
-document.addEventListener('click', closeDropdowns);
-
-studyModeBtn.addEventListener('click', selectStudyMode);
-
-allCardsBtn.addEventListener('click', selectAllCards);
-
-revealAnswer.addEventListener('click', reveal);
+const app = new App();
