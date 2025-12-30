@@ -44,6 +44,20 @@ class FlashcardTracker {
 		return this._totalCards;
 	}
 
+	getNextCard() {
+		if (this._currentCard + 1 > this._flashcards.length)
+			return this._flashcards[0];
+
+		return this._flashcards[this._currentCard++];
+	}
+
+	getPreviousCard() {
+		if (this._currentCard - 1 < 0)
+			return this._flashcards[this._flashcards.length];
+
+		return this._flashcards[this._currentCard--];
+	}
+
 	/* Private Methods */
 
 	_displayTotalCards() {
@@ -232,6 +246,16 @@ class App {
 		this._tracker = new FlashcardTracker();
 
 		this._loadEventListeners();
+	}
+
+	_getNextCard() {
+		this._displayCardStudyMode(this._tracker.getNextCard());
+		this._displayCardNumber();
+	}
+
+	_getPreviousCard() {
+		this._displayCardStudyMode(this._tracker.getPreviousCard());
+		this._displayCardNumber();
 	}
 
 	_displayCardStudyMode(card) {
@@ -512,6 +536,14 @@ class App {
 		document
 			.querySelector('.flashcard-content')
 			.addEventListener('click', this._revealAnswer);
+
+		document
+			.querySelector('.next-card')
+			.addEventListener('click', this._getNextCard.bind(this));
+
+		document
+			.querySelector('.previous-card')
+			.addEventListener('click', this._getPreviousCard.bind(this));
 	}
 }
 
