@@ -15,12 +15,11 @@ class FlashcardTracker {
 		this._totalCards++;
 		this._totalNotStarted++;
 
+		this._displayNewCardAll(card);
+		this._populateCategoryDropdown(card);
 		if (!this._categories.includes(card.category.toLowerCase())) {
 			this._categories.push(card.category);
 		}
-
-		this._displayNewCardAll(card);
-		this._populateCategoryDropdown(card);
 		this._render();
 	}
 
@@ -151,13 +150,23 @@ class FlashcardTracker {
 			categoryEl.setAttribute('aria-checked', false);
 			categoryEl.setAttribute('tabindex', 0);
 
-			categoryEl.innerHTML = `<input type="checkbox" id="cat-${cardCategory}" class="dropdown-element" />
-											<label for="cat-${this._formatCategoryName(
-												card.category
-											)}" class="text--preset-5-medium ${cardCategory}">
-												${card.category} (${this._getNumberOfCategoryType(card.category)})
-											</label>`;
-			el.append(divider, categoryEl);
+			if (this._categories.includes(card.category)) {
+				const categoryLabel = document.querySelectorAll(`.${cardCategory}`);
+
+				categoryLabel.forEach((label) => {
+					label.innerHTML = `${card.category} (${this._getNumberOfCategoryType(
+						card.category
+					)})`;
+				});
+			} else {
+				categoryEl.innerHTML = `<input type="checkbox" id="cat-${cardCategory}" class="dropdown-element" />
+				<label for="cat-${this._formatCategoryName(
+					card.category
+				)}" class="text--preset-5-medium ${cardCategory}">
+				${card.category} (${this._getNumberOfCategoryType(card.category)})
+				</label>`;
+				el.append(divider, categoryEl);
+			}
 		});
 	}
 
