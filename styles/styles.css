@@ -16,6 +16,8 @@
 /* FLASHCARD SECTION */
 
 .flashcard-section {
+	display: flex;
+	flex-direction: column;
 	border-radius: 16px;
 	border-top: 1px solid var(--neutral-900);
 	border-right: 3px solid var(--neutral-900);
@@ -50,6 +52,29 @@
 
 .mastered-controls label:hover {
 	cursor: pointer;
+}
+
+.no-flashcards {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 3.2rem;
+	padding: 2rem;
+	flex: 1;
+}
+
+.flashcards-hint {
+	display: flex;
+	flex-direction: column;
+	gap: 1.2rem;
+	justify-content: center;
+	text-align: center;
+	width: 44rem;
+}
+
+.flashcard-hint p {
+	color: var(--neutral-600);
 }
 
 .flashcard-container {
@@ -179,19 +204,19 @@
 .progress-bar[data-progress='0']::before {
 	width: 0%;
 }
-.progress-bar[data-progress='20']::before {
+.progress-bar[data-progress='1']::before {
 	width: 20%;
 }
-.progress-bar[data-progress='40']::before {
+.progress-bar[data-progress='2']::before {
 	width: 40%;
 }
-.progress-bar[data-progress='60']::before {
+.progress-bar[data-progress='3']::before {
 	width: 60%;
 }
-.progress-bar[data-progress='80']::before {
+.progress-bar[data-progress='4']::before {
 	width: 80%;
 }
-.progress-bar[data-progress='100']::before {
+.progress-bar[data-progress='5']::before {
 	width: 100%;
 }
 

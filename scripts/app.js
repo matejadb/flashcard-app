@@ -4,8 +4,14 @@ class FlashcardTracker {
 		this._totalMastered = 0;
 		this._totalInProgress = 0;
 		this._totalNotStarted = 0;
+		this._currentCard = 0;
 		this._flashcards = [];
 		this._categories = [];
+
+		this._displayTotalCards();
+		this._displayTotalMastered();
+		this._displayTotalInProgress();
+		this._displayTotalNotStarted();
 	}
 
 	/* Public Methods */
@@ -20,10 +26,23 @@ class FlashcardTracker {
 		if (!this._categories.includes(card.category.toLowerCase())) {
 			this._categories.push(card.category);
 		}
+
 		this._render();
 	}
 
 	removeCard(id) {}
+
+	getCurrentCard() {
+		return this._flashcards[this._currentCard];
+	}
+
+	getCurrentCardId() {
+		return this._currentCard;
+	}
+
+	getTotalCards() {
+		return this._totalCards;
+	}
 
 	/* Private Methods */
 
@@ -70,14 +89,14 @@ class FlashcardTracker {
 									<div class="bar ">
 										<div
 											role="progressbar"
-											aria-valuenow="0"
+											aria-valuenow="${card.mastery}"
 											aria-valuemin="0"
 											aria-valuemax="5"
 											aria-label="Question progress"
 											class="progress-bar progress-bar--in-progress"
-											data-progress="0"
+											data-progress="${card.mastery}"
 										></div>
-										<span class="progress-level text--preset-6">0/5</span>
+										<span class="progress-level text--preset-6">${card.mastery}/5</span>
 									</div>
 									<div class="card-mastered hidden">
 										<img
@@ -204,6 +223,7 @@ class Flashcard {
 		this.question = question;
 		this.answer = answer;
 		this.category = category;
+		this.mastery = 0;
 	}
 }
 
@@ -212,6 +232,129 @@ class App {
 		this._tracker = new FlashcardTracker();
 
 		this._loadEventListeners();
+	}
+
+	_displayCardStudyMode(card) {
+		const flashcardContainer = document.querySelector('.flashcard-content');
+		const flashcardQuestionContainer = document.querySelector(
+			'.flashcard-content-question'
+		);
+		const flashcardAnswerContainer = document.querySelector(
+			'.flashcard-content-answer'
+		);
+
+		flashcardQuestionContainer.innerHTML = `<span class="flashcard-tag text--preset-6"
+										>${card.category}</span
+									>
+									<img
+										src="./assets/images/pattern-star-blue.svg"
+										role="presentation"
+										class="flashcard-icon flashcard-icon--top-right"
+										alt=""
+									/>
+									<img
+										src="./assets/images/pattern-star-yellow.svg"
+										role="presentation"
+										class="flashcard-icon flashcard-icon--bottom-left"
+										alt=""
+									/>
+									<div class="question-container">
+										<h2 class="question-text text--preset-1">
+											${card.question}
+										</h2>
+										<p class="reveal-answer text--preset-4-medium">
+											Click to reveal answer
+										</p>
+									</div>
+
+									<div class="progress-container">
+										<div class="bar">
+											<div
+												role="progressbar"
+												aria-valuenow="${card.mastery}"
+												aria-valuemin="0"
+												aria-valuemax="5"
+												aria-label="Question progress"
+												class="progress-bar progress-bar--in-progress"
+												data-progress="0"
+											></div>
+											<span class="progress-level text--preset-6">${card.mastery}/5</span>
+										</div>
+										<div class="card-mastered hidden">
+											<img
+												src="./assets/images/icon-mastered.svg"
+												role="presentation"
+												alt=""
+											/>
+											<span class="progress-level text--preset-6"
+												>Mastered</span
+											>
+											<span class="progress-level text--preset-6">5/5</span>
+										</div>
+									</div>`;
+
+		flashcardAnswerContainer.innerHTML = `<span class="flashcard-tag text--preset-6"
+										>${card.category}</span
+									>
+									<img
+										src="./assets/images/pattern-star-pink.svg"
+										role="presentation"
+										class="flashcard-icon flashcard-icon--top-right"
+										alt=""
+									/>
+									<img
+										src="./assets/images/pattern-star-yellow.svg"
+										role="presentation"
+										class="flashcard-icon flashcard-icon--bottom-left-answer"
+										alt=""
+									/>
+									<div class="question-container">
+										<p class="question-answer text--preset-4-medium">Answer</p>
+										<h2 class="question-text text--preset-2">
+											${card.answer}
+										</h2>
+									</div>
+
+									<div class="progress-container">
+										<div class="bar">
+											<div
+												role="progressbar"
+												aria-valuenow="${card.mastery}"
+												aria-valuemin="0"
+												aria-valuemax="5"
+												aria-label="Question progress"
+												class="progress-bar progress-bar--in-progress"
+												data-progress="0"
+											></div>
+											<span class="progress-level text--preset-6">${card.mastery}/5</span>
+										</div>
+										<div class="card-mastered hidden">
+											<img
+												src="./assets/images/icon-mastered.svg"
+												role="presentation"
+												alt=""
+											/>
+											<span class="progress-level text--preset-6"
+												>Mastered</span
+											>
+											<span class="progress-level text--preset-6">5/5</span>
+										</div>
+									</div>`;
+	}
+
+	_displayCardNumber() {
+		const cardNum = document.querySelector('.card-number');
+
+		cardNum.innerHTML = `Card ${
+			this._tracker.getCurrentCardId() + 1
+		} of ${this._tracker.getTotalCards()}`;
+	}
+
+	_hideNoCardHint() {
+		document.querySelector('.no-flashcards').classList.add('hidden');
+		document
+			.querySelector('.flashcard-container--main')
+			.classList.remove('hidden');
 	}
 
 	_newCard(e) {
@@ -227,7 +370,9 @@ class App {
 		const card = new Flashcard(question.value, answer.value, category.value);
 
 		this._tracker.addCard(card);
-
+		this._displayCardStudyMode(this._tracker.getCurrentCard());
+		this._displayCardNumber();
+		this._hideNoCardHint();
 		question.value = '';
 		answer.value = '';
 		category.value = '';
@@ -353,6 +498,10 @@ class App {
 		document
 			.querySelector('.tab--study-mode')
 			.addEventListener('click', this._selectStudyMode.bind(this));
+
+		document
+			.querySelector('.btn-hint')
+			.addEventListener('click', this._selectAllCards.bind(this));
 
 		document
 			.querySelector('.tab--all-cards')

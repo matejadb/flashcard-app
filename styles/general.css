@@ -71,7 +71,7 @@ html {
 body {
 	height: 100vh;
 	padding: 2.4rem 10rem;
-
+	color: var(--neutral-900);
 	background-color: var(--neutral-100);
 }
 
