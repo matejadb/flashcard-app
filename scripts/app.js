@@ -66,6 +66,44 @@ class FlashcardTracker {
 		return this._flashcards[this._currentCard];
 	}
 
+	updateMastery(card) {
+		if (card.mastery === 0) {
+			this._totalNotStarted--;
+			this._totalInProgress++;
+		} else if (card.mastery === 4) {
+			this._totalInProgress--;
+			this._totalMastered++;
+			// Find all cards with this ID and hide/show mastery elements
+			document.querySelectorAll(`[data-id="${card.id}"]`).forEach((cardEl) => {
+				const bar = cardEl.querySelector('.bar');
+				const mastered = cardEl.querySelector('.card-mastered');
+
+				if (bar) bar.classList.add('hidden');
+				if (mastered) mastered.classList.remove('hidden');
+			});
+		}
+
+		card.mastery++;
+
+		const allCardElements = document.querySelectorAll(
+			`[data-id="${card.id}"] .progress-bar`
+		);
+		allCardElements.forEach((bar) => {
+			bar.setAttribute('aria-valuenow', card.mastery);
+			bar.setAttribute('data-progress', card.mastery);
+		});
+
+		document
+			.querySelectorAll(`[data-id="${card.id}"] .progress-level`)
+			.forEach((text) => {
+				if (text.textContent.includes('/')) {
+					text.textContent = `${card.mastery}/5`;
+				}
+			});
+
+		this._render();
+	}
+
 	/* Private Methods */
 
 	_displayTotalCards() {
@@ -206,7 +244,7 @@ class FlashcardTracker {
 				)}" class="text--preset-5-medium ${cardCategory}">
 				${card.category} (${this._getNumberOfCategoryType(card.category)})
 				</label>`;
-				el.append(divider, categoryEl);
+				el.append(categoryEl, divider);
 			}
 		});
 	}
@@ -275,6 +313,13 @@ class App {
 			'.flashcard-content-answer'
 		);
 
+		flashcardQuestionContainer.setAttribute('data-id', card.id);
+		flashcardAnswerContainer.setAttribute('data-id', card.id);
+
+		const isMastered = card.mastery >= 5;
+		const barClass = isMastered ? 'bar hidden' : 'bar';
+		const masteredClass = isMastered ? 'card-mastered' : 'card-mastered hidden';
+
 		flashcardQuestionContainer.innerHTML = `<span class="flashcard-tag text--preset-6"
 										>${card.category}</span
 									>
@@ -300,7 +345,7 @@ class App {
 									</div>
 
 									<div class="progress-container">
-										<div class="bar">
+										<div class="${barClass}">
 											<div
 												role="progressbar"
 												aria-valuenow="${card.mastery}"
@@ -308,11 +353,11 @@ class App {
 												aria-valuemax="5"
 												aria-label="Question progress"
 												class="progress-bar progress-bar--in-progress"
-												data-progress="0"
+												data-progress="${card.mastery}"
 											></div>
 											<span class="progress-level text--preset-6">${card.mastery}/5</span>
 										</div>
-										<div class="card-mastered hidden">
+										<div class="${masteredClass}">
 											<img
 												src="./assets/images/icon-mastered.svg"
 												role="presentation"
@@ -348,7 +393,7 @@ class App {
 									</div>
 
 									<div class="progress-container">
-										<div class="bar">
+										<div class="${barClass}">
 											<div
 												role="progressbar"
 												aria-valuenow="${card.mastery}"
@@ -356,11 +401,11 @@ class App {
 												aria-valuemax="5"
 												aria-label="Question progress"
 												class="progress-bar progress-bar--in-progress"
-												data-progress="0"
+												data-progress="${card.mastery}"
 											></div>
 											<span class="progress-level text--preset-6">${card.mastery}/5</span>
 										</div>
-										<div class="card-mastered hidden">
+										<div class="${masteredClass}">
 											<img
 												src="./assets/images/icon-mastered.svg"
 												role="presentation"
@@ -372,6 +417,11 @@ class App {
 											<span class="progress-level text--preset-6">5/5</span>
 										</div>
 									</div>`;
+
+		flashcardContainer.append(
+			flashcardQuestionContainer,
+			flashcardAnswerContainer
+		);
 	}
 
 	_displayCardNumber() {
@@ -510,6 +560,14 @@ class App {
 		});
 	}
 
+	_incrementMastery() {
+		const currentCard = this._tracker.getCurrentCard();
+		if (currentCard.mastery < 5) {
+			this._tracker.updateMastery(currentCard);
+			this._displayCardStudyMode(currentCard);
+		}
+	}
+
 	_loadEventListeners() {
 		document
 			.querySelector('.form--new-card')
@@ -552,6 +610,10 @@ class App {
 		document
 			.querySelector('.previous-card')
 			.addEventListener('click', this._getPreviousCard.bind(this));
+
+		document
+			.querySelector('.btn--increment-mastery')
+			.addEventListener('click', this._incrementMastery.bind(this));
 	}
 }
 
