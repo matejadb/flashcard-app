@@ -66,7 +66,7 @@ class FlashcardTracker {
 		return this._flashcards[this._currentCard];
 	}
 
-	updateMastery(card) {
+	incrementMastery(card) {
 		if (card.mastery === 0) {
 			this._totalNotStarted--;
 			this._totalInProgress++;
@@ -84,6 +84,43 @@ class FlashcardTracker {
 		}
 
 		card.mastery++;
+
+		const allCardElements = document.querySelectorAll(
+			`[data-id="${card.id}"] .progress-bar`
+		);
+		allCardElements.forEach((bar) => {
+			bar.setAttribute('aria-valuenow', card.mastery);
+			bar.setAttribute('data-progress', card.mastery);
+		});
+
+		document
+			.querySelectorAll(`[data-id="${card.id}"] .progress-level`)
+			.forEach((text) => {
+				if (text.textContent.includes('/')) {
+					text.textContent = `${card.mastery}/5`;
+				}
+			});
+
+		this._render();
+	}
+
+	resetMastery(card) {
+		if (card.mastery === 5) {
+			this._totalMastered--;
+		} else {
+			this._totalInProgress--;
+		}
+		card.mastery = 0;
+		this._totalNotStarted++;
+
+		// Find all cards with this ID and hide/show mastery elements
+		document.querySelectorAll(`[data-id="${card.id}"]`).forEach((cardEl) => {
+			const bar = cardEl.querySelector('.bar');
+			const mastered = cardEl.querySelector('.card-mastered');
+
+			if (bar) bar.classList.remove('hidden');
+			if (mastered) mastered.classList.add('hidden');
+		});
 
 		const allCardElements = document.querySelectorAll(
 			`[data-id="${card.id}"] .progress-bar`
@@ -563,7 +600,15 @@ class App {
 	_incrementMastery() {
 		const currentCard = this._tracker.getCurrentCard();
 		if (currentCard.mastery < 5) {
-			this._tracker.updateMastery(currentCard);
+			this._tracker.incrementMastery(currentCard);
+			this._displayCardStudyMode(currentCard);
+		}
+	}
+
+	_resetMastery() {
+		const currentCard = this._tracker.getCurrentCard();
+		if (currentCard.mastery > 0) {
+			this._tracker.resetMastery(currentCard);
 			this._displayCardStudyMode(currentCard);
 		}
 	}
@@ -614,6 +659,10 @@ class App {
 		document
 			.querySelector('.btn--increment-mastery')
 			.addEventListener('click', this._incrementMastery.bind(this));
+
+		document
+			.querySelector('.btn--reset-mastery')
+			.addEventListener('click', this._resetMastery.bind(this));
 	}
 }
 
