@@ -141,6 +141,18 @@ class FlashcardTracker {
 		this._render();
 	}
 
+	shuffleCards() {
+		for (let i = this._flashcards.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[this._flashcards[i], this._flashcards[j]] = [
+				this._flashcards[j],
+				this._flashcards[i],
+			];
+		}
+
+		return this._flashcards;
+	}
+
 	/* Private Methods */
 
 	_displayTotalCards() {
@@ -613,6 +625,17 @@ class App {
 		}
 	}
 
+	_shuffleCards() {
+		const flashcards = this._tracker.shuffleCards();
+
+		document.querySelector('.flashcard-container--all-cards').innerHTML = '';
+
+		flashcards.forEach((card) => {
+			this._displayCardStudyMode(card);
+			this._tracker._displayNewCardAll(card);
+		});
+	}
+
 	_loadEventListeners() {
 		document
 			.querySelector('.form--new-card')
@@ -663,6 +686,10 @@ class App {
 		document
 			.querySelector('.btn--reset-mastery')
 			.addEventListener('click', this._resetMastery.bind(this));
+
+		document.querySelectorAll('.btn--shuffle').forEach((btn) => {
+			btn.addEventListener('click', this._shuffleCards.bind(this));
+		});
 	}
 }
 
