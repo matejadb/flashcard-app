@@ -45,17 +45,25 @@ class FlashcardTracker {
 	}
 
 	getNextCard() {
-		if (this._currentCard + 1 > this._flashcards.length)
+		if (this._currentCard + 1 > this._flashcards.length - 1) {
+			this._currentCard = 0;
 			return this._flashcards[0];
+		}
 
-		return this._flashcards[this._currentCard++];
+		this._currentCard += 1;
+
+		return this._flashcards[this._currentCard];
 	}
 
 	getPreviousCard() {
-		if (this._currentCard - 1 < 0)
-			return this._flashcards[this._flashcards.length];
+		if (this._currentCard - 1 < 0) {
+			this._currentCard = this._flashcards.length - 1;
+			return this._flashcards[this._flashcards.length - 1];
+		}
 
-		return this._flashcards[this._currentCard--];
+		this._currentCard -= 1;
+
+		return this._flashcards[this._currentCard];
 	}
 
 	/* Private Methods */
