@@ -47,7 +47,24 @@ class FlashcardTracker {
 		return this._totalCards;
 	}
 
+	getTotalMasteredCards() {
+		return this._totalMastered;
+	}
+
 	getNextCard() {
+		const checkbox = document.getElementById('hide-mastered');
+
+		if (checkbox.checked) {
+			const flashcardsMasteredHidden = this.hideMastered();
+			if (this._currentCard + 1 > flashcardsMasteredHidden.length - 1) {
+				this._currentCard = 0;
+				return flashcardsMasteredHidden[0];
+			}
+
+			this._currentCard += 1;
+			return flashcardsMasteredHidden[this._currentCard];
+		}
+
 		if (this._currentCard + 1 > this._flashcards.length - 1) {
 			this._currentCard = 0;
 			return this._flashcards[0];
@@ -59,6 +76,20 @@ class FlashcardTracker {
 	}
 
 	getPreviousCard() {
+		const checkbox = document.getElementById('hide-mastered');
+
+		if (checkbox.checked) {
+			const flashcardsMasteredHidden = this.hideMastered();
+
+			if (this._currentCard - 1 < 0) {
+				this._currentCard = flashcardsMasteredHidden.length - 1;
+				return flashcardsMasteredHidden[flashcardsMasteredHidden.length - 1];
+			}
+
+			this._currentCard -= 1;
+			return flashcardsMasteredHidden[this._currentCard];
+		}
+
 		if (this._currentCard - 1 < 0) {
 			this._currentCard = this._flashcards.length - 1;
 			return this._flashcards[this._flashcards.length - 1];
@@ -84,6 +115,17 @@ class FlashcardTracker {
 				if (bar) bar.classList.add('hidden');
 				if (mastered) mastered.classList.remove('hidden');
 			});
+
+			if (this._totalMastered === this._totalCards) {
+				const checkbox = document.getElementById('hide-mastered');
+
+				document
+					.querySelector('.flashcard-container--main')
+					.classList.add('hidden');
+				document.querySelector('.all-mastered').classList.remove('hidden');
+
+				checkbox.click();
+			}
 		}
 
 		card.mastery++;
@@ -269,6 +311,11 @@ class App {
 			const flashcards = this._tracker.hideMastered();
 			flashcards.forEach((card) => {
 				this._displayNewCardAll(card);
+				const cardNum = document.querySelector('.card-number');
+
+				cardNum.innerHTML = `Card ${this._tracker.getCurrentCardId() + 1} of ${
+					flashcards.length
+				}`;
 			});
 		} else {
 			const flashcards = this._tracker.getAllFlashcards();
@@ -277,18 +324,53 @@ class App {
 			});
 		}
 	}
+	_hideMasteredStudyMode() {
+		const checkbox = document.getElementById('hide-mastered');
+		if (this._tracker.getTotalCards() === 0) return;
+
+		if (checkbox.checked) {
+			if (
+				this._tracker.getTotalCards() === this._tracker.getTotalMasteredCards()
+			) {
+				document.querySelector('.all-mastered').classList.remove('hidden');
+				document
+					.querySelector('.flashcard-container--main')
+					.classList.add('hidden');
+			}
+
+			const flashcards = this._tracker.hideMastered();
+			this._displayCardStudyMode(flashcards[0]);
+
+			const cardNum = document.querySelector('.card-number');
+
+			cardNum.innerHTML = `Card ${this._tracker.getCurrentCardId() + 1} of ${
+				flashcards.length
+			}`;
+		} else {
+			if (
+				this._tracker.getTotalCards() === this._tracker.getTotalMasteredCards()
+			) {
+				document.querySelector('.all-mastered').classList.add('hidden');
+				document
+					.querySelector('.flashcard-container--main')
+					.classList.remove('hidden');
+			}
+
+			const currentCard = this._tracker.getCurrentCard();
+			this._displayCardStudyMode(currentCard);
+		}
+	}
 
 	_getNextCard() {
 		this._displayCardStudyMode(this._tracker.getNextCard());
-		this._displayCardNumber();
 	}
 
 	_getPreviousCard() {
 		this._displayCardStudyMode(this._tracker.getPreviousCard());
-		this._displayCardNumber();
 	}
 
 	_displayCardStudyMode(card) {
+		const checkbox = document.getElementById('hide-mastered');
 		const flashcardContainer = document.querySelector('.flashcard-content');
 		const flashcardQuestionContainer = document.querySelector(
 			'.flashcard-content-question'
@@ -406,6 +488,17 @@ class App {
 			flashcardQuestionContainer,
 			flashcardAnswerContainer
 		);
+
+		if (checkbox.checked) {
+			const flashcards = this._tracker.hideMastered();
+			const cardNum = document.querySelector('.card-number');
+
+			cardNum.innerHTML = `Card ${this._tracker.getCurrentCardId() + 1} of ${
+				flashcards.length
+			}`;
+		} else {
+			this._displayCardNumber();
+		}
 	}
 
 	_displayNewCardAll(card) {
@@ -567,7 +660,6 @@ class App {
 		this._tracker.addCard(card);
 		this._displayNewCardAll(card);
 		this._displayCardStudyMode(this._tracker.getCurrentCard());
-		this._displayCardNumber();
 		this._hideNoCardHint();
 		question.value = '';
 		answer.value = '';
@@ -759,6 +851,10 @@ class App {
 		document
 			.querySelector('#hide-mastered--all-cards')
 			.addEventListener('change', this._hideMasteredAllCards.bind(this));
+
+		document
+			.querySelector('#hide-mastered')
+			.addEventListener('change', this._hideMasteredStudyMode.bind(this));
 	}
 }
 

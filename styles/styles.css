@@ -54,7 +54,8 @@
 	cursor: pointer;
 }
 
-.no-flashcards {
+.no-flashcards,
+.all-mastered {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
