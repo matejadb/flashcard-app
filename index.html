@@ -335,7 +335,7 @@
 						</button>
 					</form>
 
-					<div class="all-cards-section-controls">
+					<div class="all-cards-section-controls hidden">
 						<div class="category-filter">
 							<div class="categories-dropdown">
 								<button
@@ -382,9 +382,15 @@
 							<span class="text--preset-4-medium">Shuffle</span>
 						</button>
 					</div>
-
-					<div class="flashcard-container--all-cards"></div>
-					<div class="pagination">
+					<div class="no-cards--all-cards">
+						<h4 class="text--preset-2">No cards to study</h4>
+						<p class="text--preset-4-regular">
+							You don't have any cards yet. Add your first card in the All Cards
+							tab.
+						</p>
+					</div>
+					<div class="flashcard-container--all-cards hidden"></div>
+					<div class="pagination hidden">
 						<button
 							class="btn btn--secondary text--preset-4-medium btn--load-more"
 						>

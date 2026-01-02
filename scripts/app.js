@@ -486,6 +486,14 @@ class App {
 		document
 			.querySelector('.flashcard-container--main')
 			.classList.remove('hidden');
+
+		document
+			.querySelector('.all-cards-section-controls')
+			.classList.remove('hidden');
+		document.querySelector('.no-cards--all-cards').classList.add('hidden');
+		document
+			.querySelector('.flashcard-container--all-cards')
+			.classList.remove('hidden');
 	}
 
 	_newCard(e) {

@@ -170,6 +170,14 @@ input[type='checkbox']:checked {
 	cursor: pointer;
 	background-color: var(--neutral-100);
 }
+
+.no-cards--all-cards {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	align-items: center;
+	justify-content: center;
+}
 /*-------------------TEXT-------------------*/
 .text--preset-1 {
 	font-family: 'Poppins', sans-serif;
