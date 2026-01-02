@@ -502,10 +502,38 @@ class App {
 		const question = document.getElementById('new-question');
 		const answer = document.getElementById('new-answer');
 		const category = document.getElementById('new-category');
+		let isValid = true;
 
-		if (!question.value || !answer.value || !category.value) {
+		const fields = [
+			{
+				element: question,
+				value: question.value,
+			},
+			{
+				element: answer,
+				value: answer.value,
+			},
+			{
+				element: category,
+				value: category.value,
+			},
+		];
+
+		fields.forEach((field) => {
+			field.element.nextElementSibling.classList.add('hidden');
+		});
+
+		fields.forEach((field) => {
+			if (!field.value) {
+				field.element.nextElementSibling.classList.remove('hidden');
+				isValid = false;
+			}
+		});
+
+		if (!isValid) {
 			return;
 		}
+
 		const card = new Flashcard(question.value, answer.value, category.value);
 
 		this._tracker.addCard(card);
