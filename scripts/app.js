@@ -21,7 +21,6 @@ class FlashcardTracker {
 		this._totalCards++;
 		this._totalNotStarted++;
 
-		this._displayNewCardAll(card);
 		this._populateCategoryDropdown(card);
 		if (!this._categories.includes(card.category.toLowerCase())) {
 			this._categories.push(card.category);
@@ -34,6 +33,10 @@ class FlashcardTracker {
 
 	getCurrentCard() {
 		return this._flashcards[this._currentCard];
+	}
+
+	getAllFlashcards() {
+		return this._flashcards;
 	}
 
 	getCurrentCardId() {
@@ -153,6 +156,10 @@ class FlashcardTracker {
 		return this._flashcards;
 	}
 
+	hideMastered() {
+		return this._flashcards.filter((card) => card.mastery !== 5);
+	}
+
 	/* Private Methods */
 
 	_displayTotalCards() {
@@ -173,95 +180,6 @@ class FlashcardTracker {
 	_displayTotalNotStarted() {
 		const totalNotStartedEl = document.querySelector('.cards--not-started');
 		totalNotStartedEl.textContent = this._totalNotStarted;
-	}
-
-	_displayNewCardAll(card) {
-		const cardsEl = document.querySelector('.flashcard-container--all-cards');
-		const cardEl = document.createElement('div');
-		cardEl.classList.add('flashcard');
-		cardEl.setAttribute('data-id', card.id);
-
-		cardEl.innerHTML = `<div class="question-container--all-cards">
-								<h4 class="text--preset-3">${card.question}</h4>
-							</div>
-							<div class="answer-container--all-cards">
-								<span class="text--preset-5-medium">Answer:</span>
-								<p class="text--preset-5-medium">${card.answer}</p>
-							</div>
-							<div class="flashcard--footer">
-								<div class="tag-container">
-									<span class="flashcard-tag count-cat text--preset-6"
-										>${card.category}</span
-									>
-								</div>
-								<div class="progress-bar-container">
-									<div class="bar ">
-										<div
-											role="progressbar"
-											aria-valuenow="${card.mastery}"
-											aria-valuemin="0"
-											aria-valuemax="5"
-											aria-label="Question progress"
-											class="progress-bar progress-bar--in-progress"
-											data-progress="${card.mastery}"
-										></div>
-										<span class="progress-level text--preset-6">${card.mastery}/5</span>
-									</div>
-									<div class="card-mastered hidden">
-										<img
-											src="./assets/images/icon-mastered.svg"
-											role="presentation"
-											alt=""
-										/>
-										<span class="progress-level text--preset-6">Mastered</span>
-										<span class="progress-level text--preset-6">5/5</span>
-									</div>
-								</div>
-
-								<div class="menu-container">
-									<div class="card-menu--dropdown">
-										<div
-											id="card-menu"
-											role="menu"
-											aria-labelledby="menu-button"
-											class="menu-dropdown--content hidden"
-										>
-											<div role="menuitem" aria-checked="false" tabindex="0">
-												<img
-													src="./assets/images/icon-edit.svg"
-													role="presentation"
-													alt=""
-												/>
-												<span class="text--preset-5-medium">Edit</span>
-											</div>
-											<hr />
-											<div role="menuitem" aria-checked="false" tabindex="0">
-												<img
-													src="./assets/images/icon-delete.svg"
-													role="presentation"
-													alt=""
-												/>
-												<span class="text--preset-5-medium">Delete</span>
-											</div>
-											<hr />
-										</div>
-									</div>
-									<button
-										class="menu-icon menu-btn"
-										aria-expanded="false"
-										aria-haspopup="menu"
-										type="button"
-									>
-										<img
-											class="card-menu"
-											src="./assets/images/icon-menu.svg"
-											alt="Card menu button"
-										/>
-									</button>
-								</div>
-							</div>`;
-
-		cardsEl.appendChild(cardEl);
 	}
 
 	_populateCategoryDropdown(card) {
@@ -341,6 +259,23 @@ class App {
 		this._tracker = new FlashcardTracker();
 
 		this._loadEventListeners();
+	}
+
+	_hideMasteredAllCards() {
+		const checkbox = document.getElementById('hide-mastered--all-cards');
+		document.querySelector('.flashcard-container--all-cards').innerHTML = ``;
+
+		if (checkbox.checked) {
+			const flashcards = this._tracker.hideMastered();
+			flashcards.forEach((card) => {
+				this._displayNewCardAll(card);
+			});
+		} else {
+			const flashcards = this._tracker.getAllFlashcards();
+			flashcards.forEach((card) => {
+				this._displayNewCardAll(card);
+			});
+		}
 	}
 
 	_getNextCard() {
@@ -473,6 +408,99 @@ class App {
 		);
 	}
 
+	_displayNewCardAll(card) {
+		const cardsEl = document.querySelector('.flashcard-container--all-cards');
+		const cardEl = document.createElement('div');
+		cardEl.classList.add('flashcard');
+		cardEl.setAttribute('data-id', card.id);
+
+		const isMastered = card.mastery >= 5;
+		const barClass = isMastered ? 'bar hidden' : 'bar';
+		const masteredClass = isMastered ? 'card-mastered' : 'card-mastered hidden';
+
+		cardEl.innerHTML = `<div class="question-container--all-cards">
+								<h4 class="text--preset-3">${card.question}</h4>
+							</div>
+							<div class="answer-container--all-cards">
+								<span class="text--preset-5-medium">Answer:</span>
+								<p class="text--preset-5-medium">${card.answer}</p>
+							</div>
+							<div class="flashcard--footer">
+								<div class="tag-container">
+									<span class="flashcard-tag count-cat text--preset-6"
+										>${card.category}</span
+									>
+								</div>
+								<div class="progress-bar-container">
+									<div class="${barClass}">
+										<div
+											role="progressbar"
+											aria-valuenow="${card.mastery}"
+											aria-valuemin="0"
+											aria-valuemax="5"
+											aria-label="Question progress"
+											class="progress-bar progress-bar--in-progress"
+											data-progress="${card.mastery}"
+										></div>
+										<span class="progress-level text--preset-6">${card.mastery}/5</span>
+									</div>
+									<div class="${masteredClass}">
+										<img
+											src="./assets/images/icon-mastered.svg"
+											role="presentation"
+											alt=""
+										/>
+										<span class="progress-level text--preset-6">Mastered</span>
+										<span class="progress-level text--preset-6">5/5</span>
+									</div>
+								</div>
+
+								<div class="menu-container">
+									<div class="card-menu--dropdown">
+										<div
+											id="card-menu"
+											role="menu"
+											aria-labelledby="menu-button"
+											class="menu-dropdown--content hidden"
+										>
+											<div role="menuitem" aria-checked="false" tabindex="0">
+												<img
+													src="./assets/images/icon-edit.svg"
+													role="presentation"
+													alt=""
+												/>
+												<span class="text--preset-5-medium">Edit</span>
+											</div>
+											<hr />
+											<div role="menuitem" aria-checked="false" tabindex="0">
+												<img
+													src="./assets/images/icon-delete.svg"
+													role="presentation"
+													alt=""
+												/>
+												<span class="text--preset-5-medium">Delete</span>
+											</div>
+											<hr />
+										</div>
+									</div>
+									<button
+										class="menu-icon menu-btn"
+										aria-expanded="false"
+										aria-haspopup="menu"
+										type="button"
+									>
+										<img
+											class="card-menu"
+											src="./assets/images/icon-menu.svg"
+											alt="Card menu button"
+										/>
+									</button>
+								</div>
+							</div>`;
+
+		cardsEl.appendChild(cardEl);
+	}
+
 	_displayCardNumber() {
 		const cardNum = document.querySelector('.card-number');
 
@@ -537,6 +565,7 @@ class App {
 		const card = new Flashcard(question.value, answer.value, category.value);
 
 		this._tracker.addCard(card);
+		this._displayNewCardAll(card);
 		this._displayCardStudyMode(this._tracker.getCurrentCard());
 		this._displayCardNumber();
 		this._hideNoCardHint();
@@ -667,7 +696,7 @@ class App {
 		document.querySelector('.flashcard-container--all-cards').innerHTML = '';
 
 		flashcards.forEach((card) => {
-			this._tracker._displayNewCardAll(card);
+			this._displayNewCardAll(card);
 		});
 		this._displayCardStudyMode(flashcards[0]);
 	}
@@ -726,6 +755,10 @@ class App {
 		document.querySelectorAll('.btn--shuffle').forEach((btn) => {
 			btn.addEventListener('click', this._shuffleCards.bind(this));
 		});
+
+		document
+			.querySelector('#hide-mastered--all-cards')
+			.addEventListener('change', this._hideMasteredAllCards.bind(this));
 	}
 }
 
