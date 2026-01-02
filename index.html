@@ -7,8 +7,7 @@
 			rel="icon"
 			type="image/png"
 			sizes="32x32"
-			href="./assets/images/favicon-32x32.png"
-		/>
+			href="./assets/images/favicon-32x32.png" />
 		<link rel="stylesheet" href="./styles/general.css" />
 		<link rel="stylesheet" href="./styles/styles.css" />
 		<link rel="stylesheet" href="./styles/queries.css" />
@@ -16,8 +15,7 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-			rel="stylesheet"
-		/>
+			rel="stylesheet" />
 
 		<title>Frontend Mentor | Flashcard app</title>
 	</head>
@@ -29,8 +27,7 @@
 					<img
 						src="./assets/images/logo-large.svg"
 						id="logo"
-						alt="Flashcard App Logo"
-					/>
+						alt="Flashcard App Logo" />
 				</h1>
 				<div role="tablist" class="tablist">
 					<button
@@ -39,8 +36,7 @@
 						aria-controls="study-mode-panel"
 						class="tab tab--current tab--study-mode text--preset-4-semi"
 						type="button"
-						aria-selected="true"
-					>
+						aria-selected="true">
 						Study Mode
 					</button>
 					<button
@@ -49,8 +45,7 @@
 						aria-controls="all-cards-panel"
 						class="tab tab--all-cards text--preset-4-semi"
 						type="button"
-						aria-selected="false"
-					>
+						aria-selected="false">
 						All Cards
 					</button>
 				</div>
@@ -61,8 +56,7 @@
 					id="study-mode-panel"
 					role="tabpanel"
 					aria-labelledby="study-tab"
-					class="study-mode-content"
-				>
+					class="study-mode-content">
 					<div class="flashcard-section">
 						<header class="flashcard-section-header">
 							<div class="category-filter">
@@ -71,31 +65,27 @@
 										class="btn btn--border category-btn"
 										aria-expanded="false"
 										aria-haspopup="listbox"
-										type="button"
-									>
+										type="button">
 										<span class="text--preset-4-medium">All Categories</span>
 										<img
 											src="./assets/images/icon-chevron-down.svg"
 											role="presentation"
-											alt=""
-										/>
+											alt="" />
 									</button>
 									<div
 										id="category-menu"
 										role="menu"
 										aria-labelledby="category-button"
-										class="categories-dropdown--content hidden"
-									></div>
+										class="categories-dropdown--content hidden"></div>
 								</div>
 								<div class="mastered-controls">
 									<input
 										type="checkbox"
 										id="hide-mastered"
-										class="hide-mastered"
-									/>
-									<label for="hide-mastered" class="text--preset-4-medium"
-										>Hide Mastered</label
-									>
+										class="hide-mastered" />
+									<label for="hide-mastered" class="text--preset-4-medium">
+										Hide Mastered
+									</label>
 								</div>
 							</div>
 
@@ -103,8 +93,7 @@
 								<img
 									src="./assets/images/icon-shuffle.svg"
 									role="presentation"
-									alt=""
-								/>
+									alt="" />
 								<span class="text--preset-4-medium">Shuffle</span>
 							</button>
 						</header>
@@ -128,37 +117,31 @@
 								<div class="flashcard-content">
 									<article
 										class="flashcard-content-question"
-										aria-live="polite"
-									></article>
+										aria-live="polite"></article>
 
 									<article
 										class="flashcard-content-answer hidden"
-										aria-live="polite"
-									></article>
+										aria-live="polite"></article>
 								</div>
 
 								<div class="flashcard-actions">
 									<button
 										class="btn btn--primary btn--increment-mastery"
-										type="button"
-									>
+										type="button">
 										<img
 											src="./assets/images/icon-circle-check.svg"
 											role="presentation"
-											alt=""
-										/>
+											alt="" />
 										<span class="text--preset-4-medium">I Know This</span>
 									</button>
 
 									<button
 										class="btn btn--secondary btn--reset-mastery"
-										type="button"
-									>
+										type="button">
 										<img
 											src="./assets/images/icon-reset.svg"
 											role="presentation"
-											alt=""
-										/>
+											alt="" />
 										<span class="text--preset-4-medium">Reset Progress</span>
 									</button>
 								</div>
@@ -167,28 +150,25 @@
 
 							<nav
 								aria-label="Flashcard navigation"
-								class="navigation-controls"
-							>
+								class="navigation-controls">
 								<button class="btn btn--border previous-card" type="button">
 									<img
 										src="./assets/images/icon-chevron-left.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 									<span class="text--preset-4-medium">Previous</span>
 								</button>
 
-								<span class="text--preset-5-medium card-number"
-									>Card 1 of 40</span
-								>
+								<span class="text--preset-5-medium card-number">
+									Card 1 of 40
+								</span>
 
 								<button class="btn btn--border next-card" type="button">
 									<span class="text--preset-4-medium">Next</span>
 									<img
 										src="./assets/images/icon-chevron-right.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 								</button>
 							</nav>
 						</div>
@@ -207,8 +187,7 @@
 									<img
 										src="./assets/images/icon-stats-total.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 								</div>
 							</div>
 
@@ -221,8 +200,7 @@
 									<img
 										src="./assets/images/icon-stats-mastered.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 								</div>
 							</div>
 
@@ -235,8 +213,7 @@
 									<img
 										src="./assets/images/icon-stats-in-progress.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 								</div>
 							</div>
 
@@ -249,8 +226,7 @@
 									<img
 										src="./assets/images/icon-stats-not-started.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 								</div>
 							</div>
 						</div>
@@ -261,66 +237,59 @@
 					id="all-cards-panel"
 					role="tabpanel"
 					aria-labelledby="all-cards-tab"
-					class="all-cards-content hidden"
-				>
+					class="all-cards-content hidden">
 					<form class="form--new-card">
 						<div class="new-card--input">
 							<div class="input">
-								<label for="new-question" class="text--preset-4-medium"
-									>Question</label
-								>
+								<label for="new-question" class="text--preset-4-medium">
+									Question
+								</label>
 								<input
 									type="text"
 									id="new-question"
 									name="new-question"
 									class="text--preset-4-regular"
-									placeholder="e.g, What is the capital of France?"
-								/>
+									placeholder="e.g, What is the capital of France?" />
 								<div class="input--error hidden">
 									<img
 										src="./assets/images/icon-error.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 									<p class="text--preset-5-regular">Please enter a question.</p>
 								</div>
 							</div>
 							<div class="input">
-								<label for="new-answer" class="text--preset-4-medium"
-									>Answer</label
-								>
+								<label for="new-answer" class="text--preset-4-medium">
+									Answer
+								</label>
 								<textarea
 									name="new-answer"
 									id="new-answer"
 									class="text--preset-4-regular"
-									placeholder="e.g, Paris"
-								></textarea>
+									placeholder="e.g, Paris"></textarea>
 								<div class="input--error hidden">
 									<img
 										src="./assets/images/icon-error.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 									<p class="text--preset-5-regular">Please enter an answer.</p>
 								</div>
 							</div>
 							<div class="input">
-								<label for="new-category" class="text--preset-4-medium"
-									>Category</label
-								>
+								<label for="new-category" class="text--preset-4-medium">
+									Category
+								</label>
 								<input
 									type="text"
 									id="new-category"
 									name="new-category"
 									class="text--preset-4-regular"
-									placeholder="e.g, Geography"
-								/>
+									placeholder="e.g, Geography" />
 								<div class="input--error hidden">
 									<img
 										src="./assets/images/icon-error.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 									<p class="text--preset-5-regular">Please enter a category.</p>
 								</div>
 							</div>
@@ -329,8 +298,7 @@
 							<img
 								src="./assets/images/icon-circle-plus.svg"
 								role="presentation"
-								alt=""
-							/>
+								alt="" />
 							<span class="text--preset-4-semi">Create Card</span>
 						</button>
 					</form>
@@ -342,34 +310,30 @@
 									class="btn btn--border category-btn"
 									aria-expanded="false"
 									aria-haspopup="listbox"
-									type="button"
-								>
+									type="button">
 									<span class="text--preset-4-medium">All Categories</span>
 									<img
 										src="./assets/images/icon-chevron-down.svg"
 										role="presentation"
-										alt=""
-									/>
+										alt="" />
 								</button>
 								<div
 									id="category-menu"
 									role="menu"
 									aria-labelledby="category-button"
-									class="categories-dropdown--content hidden"
-								></div>
+									class="categories-dropdown--content hidden"></div>
 							</div>
 
 							<div class="mastered-controls">
 								<input
 									type="checkbox"
 									id="hide-mastered--all-cards"
-									class="hide-mastered"
-								/>
+									class="hide-mastered" />
 								<label
 									for="hide-mastered--all-cards"
-									class="text--preset-4-medium"
-									>Hide Mastered</label
-								>
+									class="text--preset-4-medium">
+									Hide Mastered
+								</label>
 							</div>
 						</div>
 
@@ -377,8 +341,7 @@
 							<img
 								src="./assets/images/icon-shuffle.svg"
 								role="presentation"
-								alt=""
-							/>
+								alt="" />
 							<span class="text--preset-4-medium">Shuffle</span>
 						</button>
 					</div>
@@ -392,8 +355,7 @@
 					<div class="flashcard-container--all-cards hidden"></div>
 					<div class="pagination hidden">
 						<button
-							class="btn btn--secondary text--preset-4-medium btn--load-more"
-						>
+							class="btn btn--secondary text--preset-4-medium btn--load-more">
 							Load More
 						</button>
 					</div>
