@@ -631,9 +631,9 @@ class App {
 		document.querySelector('.flashcard-container--all-cards').innerHTML = '';
 
 		flashcards.forEach((card) => {
-			this._displayCardStudyMode(card);
 			this._tracker._displayNewCardAll(card);
 		});
+		this._displayCardStudyMode(flashcards[0]);
 	}
 
 	_loadEventListeners() {
