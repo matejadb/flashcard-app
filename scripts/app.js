@@ -226,7 +226,7 @@ class FlashcardTracker {
 			(element) => element.textContent === category
 		);
 
-		return typeCategoriesEl.length;
+		return typeCategoriesEl.length + 1;
 	}
 
 	_checkIfCategoryExists(category) {
