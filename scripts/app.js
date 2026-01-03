@@ -30,7 +30,6 @@ class FlashcardTracker {
 	}
 
 	removeCard(id) {
-		// this._flashcards = this._flashcards.filter((card) => card.id !== id);
 		const index = this._flashcards.findIndex((card) => card.id === id);
 
 		if (index !== -1) {
@@ -44,6 +43,20 @@ class FlashcardTracker {
 				this._totalMastered--;
 			}
 			this._flashcards.splice(index, 1);
+
+			const cardCategory = this._formatCategoryName(card.category);
+			let catNum = this._getNumberOfCategoryType(card.category);
+
+			const dropdownEl = document.querySelectorAll(`.${cardCategory}`);
+
+			dropdownEl.forEach((el) => {
+				if (catNum === 0) {
+					this._categories = this._categories.filter(
+						(cat) => cat !== cardCategory
+					);
+					el.parentElement.remove();
+				} else el.textContent = `${card.category} (${catNum})`;
+			});
 
 			if (index > this._flashcards.length - 1) this._currentCard = 0;
 			else this._currentCard = index;
@@ -250,6 +263,8 @@ class FlashcardTracker {
 			'.categories-dropdown--content'
 		);
 
+		categoriesEl.innerHTML = ``;
+
 		categoriesEl.forEach((el) => {
 			const cardCategory = this._formatCategoryName(card.category);
 
@@ -284,12 +299,7 @@ class FlashcardTracker {
 	}
 
 	_getNumberOfCategoryType(category) {
-		const allCategoriesEl = document.querySelectorAll('.count-cat');
-		const typeCategoriesEl = Array.from(allCategoriesEl).filter(
-			(element) => element.textContent === category
-		);
-
-		return typeCategoriesEl.length + 1;
+		return this._flashcards.filter((card) => card.category === category).length;
 	}
 
 	_checkIfCategoryExists(category) {
