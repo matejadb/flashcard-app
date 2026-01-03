@@ -65,6 +65,10 @@ class FlashcardTracker {
 		}
 	}
 
+	editCard(id) {
+		const index = this._flashcards.findIndex((card) => card.id === id);
+	}
+
 	getCurrentCard() {
 		return this._flashcards[this._currentCard];
 	}
@@ -824,8 +828,49 @@ class App {
 		this._displayCardStudyMode(flashcards[0]);
 	}
 
+	_showModalEdit() {
+		const modal = document.querySelector('.confirm--edit');
+		const btnConfirm = document.querySelector('.btn--confirm-edit');
+		const btnCancel = document.querySelector('.btn--cancel-edit');
+		modal.showModal();
+		return new Promise((resolve, reject) => {
+			const yesHandler = () => {
+				modal.close();
+				resolve();
+			};
+
+			const noHandler = () => {
+				modal.close();
+				reject();
+			};
+
+			btnConfirm.addEventListener('click', yesHandler, { once: true });
+			btnCancel.addEventListener('click', noHandler, { once: true });
+		});
+	}
+
 	_editCard(e) {
-		console.log(e.target.closest('.flashcard'));
+		const question = document.getElementById('edit-question');
+		const answer = document.getElementById('edit-answer');
+		const category = document.getElementById('edit-category');
+
+		const flashcard = e.target.closest('.flashcard');
+		const id = flashcard.getAttribute('data-id');
+		const flashcardToEdit = this._tracker
+			.getAllFlashcards()
+			.filter((card) => card.id === id)[0];
+
+		console.log(flashcardToEdit);
+
+		question.value = flashcardToEdit.question;
+		answer.value = flashcardToEdit.answer;
+		category.value = flashcardToEdit.category;
+
+		this._showModalEdit()
+			.then(() => {
+				console.log('editing');
+			})
+			.catch(() => {});
 	}
 
 	_showModalDelete() {

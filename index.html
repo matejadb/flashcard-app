@@ -362,6 +362,80 @@
 						</p>
 					</div>
 					<div class="flashcard-container--all-cards hidden"></div>
+					<dialog class="confirm--edit">
+						<div class="dialog-container">
+							<button class="btn--cancel-edit">
+								<img
+									src="./assets/images/icon-cross.svg"
+									alt="Icon cross. Close modal" />
+							</button>
+							<h3 class="text--preset-2">Edit your card</h3>
+							<form class="edit-card-form">
+								<div class="input">
+									<label for="edit-question" class="text--preset-4-medium">
+										Question
+									</label>
+									<input
+										type="text"
+										id="edit-question"
+										name="edit-question"
+										class="text--preset-4-regular" />
+									<div class="input--error hidden">
+										<img
+											src="./assets/images/icon-error.svg"
+											role="presentation"
+											alt="" />
+										<p class="text--preset-5-regular">
+											Please enter a question.
+										</p>
+									</div>
+								</div>
+								<div class="input">
+									<label for="edit-answer" class="text--preset-4-medium">
+										Answer
+									</label>
+									<textarea
+										name="edit-answer"
+										id="edit-answer"
+										class="text--preset-4-regular"></textarea>
+									<div class="input--error hidden">
+										<img
+											src="./assets/images/icon-error.svg"
+											role="presentation"
+											alt="" />
+										<p class="text--preset-5-regular">
+											Please enter an answer.
+										</p>
+									</div>
+								</div>
+								<div class="input">
+									<label for="edit-category" class="text--preset-4-medium">
+										Category
+									</label>
+									<input
+										type="text"
+										id="edit-category"
+										name="edit-category"
+										class="text--preset-4-regular" />
+									<div class="input--error hidden">
+										<img
+											src="./assets/images/icon-error.svg"
+											role="presentation"
+											alt="" />
+										<p class="text--preset-5-regular">
+											Please enter a category.
+										</p>
+									</div>
+								</div>
+							</form>
+							<div class="btn-container">
+								<button
+									class="btn btn--primary text--preset-4-semi btn--confirm-edit">
+									Update Card
+								</button>
+							</div>
+						</div>
+					</dialog>
 					<dialog class="confirm--delete">
 						<div class="dialog--text">
 							<h3 class="text--preset-2">Delete this card?</h3>

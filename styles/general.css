@@ -393,7 +393,6 @@ FOR MOBILE
 
 /*------------------MODALS------------------*/
 .confirm--delete {
-	position: absolute;
 	width: 60rem;
 	flex-direction: column;
 	background-color: var(--neutral-0);
@@ -402,12 +401,14 @@ FOR MOBILE
 	border-right: 4px solid var(--neutral-900);
 	border-bottom: 4px solid var(--neutral-900);
 	border-left: 1px solid var(--neutral-900);
+	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
 
-.confirm--delete::backdrop {
+.confirm--delete::backdrop,
+.confirm--edit::backdrop {
 	background-color: var(--neutral-900);
 	opacity: 0.7;
 }
@@ -424,6 +425,47 @@ FOR MOBILE
 	display: flex;
 	gap: 10px;
 	padding: 1.2rem 2.4rem 1.6rem 2.4rem;
+	justify-content: right;
+}
+
+.confirm--edit {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--neutral-0);
+	border-radius: 1.6rem;
+	border-top: 1px solid var(--neutral-900);
+	border-right: 4px solid var(--neutral-900);
+	border-bottom: 4px solid var(--neutral-900);
+	border-left: 1px solid var(--neutral-900);
+	width: 60rem;
+}
+
+.dialog-container {
+	display: flex;
+	flex-direction: column;
+	gap: 2.4rem;
+	padding: 3.2rem;
+}
+
+.btn--cancel-edit {
+	cursor: pointer;
+	position: fixed;
+	top: 1.6rem;
+	right: 1.6rem;
+	background: none;
+	border: none;
+}
+
+.edit-card-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.6rem;
+}
+
+.btn-container {
+	display: flex;
 	justify-content: right;
 }
 
