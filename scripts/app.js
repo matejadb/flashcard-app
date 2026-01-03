@@ -29,7 +29,26 @@ class FlashcardTracker {
 		this._render();
 	}
 
-	removeCard(id) {}
+	removeCard(id) {
+		// this._flashcards = this._flashcards.filter((card) => card.id !== id);
+		const index = this._flashcards.findIndex((card) => card.id === id);
+
+		if (index !== -1) {
+			const card = this._flashcards[index];
+			console.log(card);
+			this._totalCards--;
+			if (card.mastery > 0 && card.mastery < 5) {
+				this._totalInProgress--;
+			} else if (card.mastery === 0) {
+				this._totalNotStarted--;
+			} else if (card.mastery === 5) {
+				this._totalMastered--;
+			}
+			this._flashcards.splice(index, 1);
+
+			this._render();
+		}
+	}
 
 	getCurrentCard() {
 		return this._flashcards[this._currentCard];
@@ -556,23 +575,23 @@ class App {
 											aria-labelledby="menu-button"
 											class="menu-dropdown--content hidden"
 										>
-											<div role="menuitem" aria-checked="false" tabindex="0">
+											<button class="btn--edit-card" role="menuitem" aria-checked="false" tabindex="0">
 												<img
 													src="./assets/images/icon-edit.svg"
 													role="presentation"
 													alt=""
 												/>
 												<span class="text--preset-5-medium">Edit</span>
-											</div>
+											</button>
 											<hr />
-											<div role="menuitem" aria-checked="false" tabindex="0">
+											<button class="btn--delete-card" role="menuitem" aria-checked="false" tabindex="0">
 												<img
 													src="./assets/images/icon-delete.svg"
 													role="presentation"
 													alt=""
 												/>
 												<span class="text--preset-5-medium">Delete</span>
-											</div>
+											</button>
 											<hr />
 										</div>
 									</div>
@@ -793,6 +812,20 @@ class App {
 		this._displayCardStudyMode(flashcards[0]);
 	}
 
+	_editCard(e) {
+		console.log(e.target.closest('.flashcard'));
+	}
+
+	_deleteCard(e) {
+		console.log(e.target.closest('.flashcard'));
+
+		const id = e.target.closest('.flashcard').getAttribute('data-id');
+
+		this._tracker.removeCard(id);
+
+		e.target.closest('.flashcard').remove();
+	}
+
 	_loadEventListeners() {
 		document
 			.querySelector('.form--new-card')
@@ -855,6 +888,18 @@ class App {
 		document
 			.querySelector('#hide-mastered')
 			.addEventListener('change', this._hideMasteredStudyMode.bind(this));
+
+		document.addEventListener('click', (e) => {
+			if (e.target.closest('.btn--edit-card')) {
+				e.stopPropagation();
+				this._editCard(e);
+			}
+
+			if (e.target.closest('.btn--delete-card')) {
+				e.stopPropagation();
+				this._deleteCard(e);
+			}
+		});
 	}
 }
 

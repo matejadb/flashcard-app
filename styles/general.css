@@ -164,6 +164,7 @@ input[type='checkbox']:checked {
 	right: -50%;
 	margin-bottom: 0.6rem;
 	min-width: 14rem;
+	overflow: hidden;
 }
 
 .menu-dropdown--content div:hover {
@@ -177,6 +178,23 @@ input[type='checkbox']:checked {
 	gap: 1rem;
 	align-items: center;
 	justify-content: center;
+}
+
+.btn--delete-card,
+.btn--edit-card {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	width: 100%;
+	background-color: var(--neutral-0);
+	border: none;
+	cursor: pointer;
+}
+
+.btn--delete-card:hover,
+.btn--edit-card:hover {
+	background-color: var(--neutral-100);
 }
 /*-------------------TEXT-------------------*/
 .text--preset-1 {
