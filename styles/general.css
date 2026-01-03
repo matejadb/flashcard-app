@@ -390,3 +390,41 @@ FOR MOBILE
 }
 
 /*------------------------------------------*/
+
+/*------------------MODALS------------------*/
+.confirm--delete {
+	position: absolute;
+	width: 60rem;
+	flex-direction: column;
+	background-color: var(--neutral-0);
+	border-radius: 1.6rem;
+	border-top: 1px solid var(--neutral-900);
+	border-right: 4px solid var(--neutral-900);
+	border-bottom: 4px solid var(--neutral-900);
+	border-left: 1px solid var(--neutral-900);
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.confirm--delete::backdrop {
+	background-color: var(--neutral-900);
+	opacity: 0.7;
+}
+
+.dialog--text {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: var(--neutral-900);
+	padding: 2.4rem;
+}
+
+.dialog--btns {
+	display: flex;
+	gap: 10px;
+	padding: 1.2rem 2.4rem 1.6rem 2.4rem;
+	justify-content: right;
+}
+
+/*------------------------------------------*/

@@ -828,31 +828,58 @@ class App {
 		console.log(e.target.closest('.flashcard'));
 	}
 
+	_showModalDelete() {
+		const modal = document.querySelector('.confirm--delete');
+		const btnConfirm = document.querySelector('.btn--confirm-delete');
+		const btnCancel = document.querySelector('.btn--cancel-delete');
+		modal.showModal();
+
+		return new Promise((resolve, reject) => {
+			const yesHandler = () => {
+				modal.close();
+				resolve();
+			};
+
+			const noHandler = () => {
+				modal.close();
+				reject();
+			};
+
+			btnConfirm.addEventListener('click', yesHandler, { once: true });
+			btnCancel.addEventListener('click', noHandler, { once: true });
+		});
+	}
+
 	_deleteCard(e) {
 		const checkbox = document.getElementById('hide-mastered');
 
-		const id = e.target.closest('.flashcard').getAttribute('data-id');
+		this._showModalDelete()
+			.then(() => {
+				const id = e.target.closest('.flashcard').getAttribute('data-id');
 
-		this._tracker.removeCard(id);
-		e.target.closest('.flashcard').remove();
+				this._tracker.removeCard(id);
+				e.target.closest('.flashcard').remove();
 
-		if (this._tracker.getTotalCards() === 0) {
-			document.querySelector('.no-flashcards').classList.remove('hidden');
-			document
-				.querySelector('.flashcard-container--main')
-				.classList.add('hidden');
-		} else if (
-			this._tracker.getTotalMasteredCards() === this._tracker.getTotalCards() &&
-			this._tracker.getTotalCards() !== 0
-		) {
-			document
-				.querySelector('.flashcard-container--main')
-				.classList.add('hidden');
-			document.querySelector('.all-mastered').classList.remove('hidden');
-			checkbox.checked = true;
-		} else {
-			this._displayCardStudyMode(this._tracker.getCurrentCard());
-		}
+				if (this._tracker.getTotalCards() === 0) {
+					document.querySelector('.no-flashcards').classList.remove('hidden');
+					document
+						.querySelector('.flashcard-container--main')
+						.classList.add('hidden');
+				} else if (
+					this._tracker.getTotalMasteredCards() ===
+						this._tracker.getTotalCards() &&
+					this._tracker.getTotalCards() !== 0
+				) {
+					document
+						.querySelector('.flashcard-container--main')
+						.classList.add('hidden');
+					document.querySelector('.all-mastered').classList.remove('hidden');
+					checkbox.checked = true;
+				} else {
+					this._displayCardStudyMode(this._tracker.getCurrentCard());
+				}
+			})
+			.catch(() => {});
 	}
 
 	_loadEventListeners() {
