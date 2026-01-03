@@ -868,7 +868,6 @@ class App {
 		const flashcardToEdit = this._tracker
 			.getAllFlashcards()
 			.filter((card) => card.id === id)[0];
-		console.log(flashcardToEdit);
 
 		question.value = flashcardToEdit.question;
 		answer.value = flashcardToEdit.answer;
@@ -926,7 +925,7 @@ class App {
 			flashcardsArr.forEach((card) => {
 				this._displayNewCardAll(card);
 			});
-
+			this._displayCardStudyMode(this._tracker.getCurrentCard());
 			modal.close();
 			cleanup();
 		};
