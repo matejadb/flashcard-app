@@ -767,6 +767,7 @@ class App {
 
 	_toggleCategoryDropdown(e) {
 		e.stopPropagation();
+
 		const btn = e.currentTarget;
 		const dropdown = btn.nextElementSibling;
 
@@ -841,10 +842,6 @@ class App {
 	}
 
 	_showModalEdit() {
-		const modal = document.querySelector('.confirm--edit');
-		const btnConfirm = document.querySelector('.btn--confirm-edit');
-		const btnCancel = document.querySelector('.btn--cancel-edit');
-		modal.showModal();
 		return new Promise((resolve, reject) => {
 			const yesHandler = () => {
 				modal.close();
@@ -877,23 +874,75 @@ class App {
 		answer.value = flashcardToEdit.answer;
 		category.value = flashcardToEdit.category;
 
-		this._showModalEdit()
-			.then(() => {
-				flashcardToEdit.question = question.value;
-				flashcardToEdit.answer = answer.value;
-				flashcardToEdit.category = category.value;
-				flashcardToEdit.mastery = 0;
+		const modal = document.querySelector('.confirm--edit');
+		const btnConfirm = document.querySelector('.btn--confirm-edit');
+		const btnCancel = document.querySelector('.btn--cancel-edit');
+		modal.showModal();
 
-				this._tracker.editCard(id, flashcardToEdit);
-				const flashcardsArr = this._tracker.getAllFlashcards();
-				document.querySelector(
-					'.flashcard-container--all-cards'
-				).innerHTML = ``;
-				flashcardsArr.forEach((card) => {
-					this._displayNewCardAll(card);
-				});
-			})
-			.catch(() => {});
+		const confirmHandler = () => {
+			const question = document.getElementById('edit-question');
+			const answer = document.getElementById('edit-answer');
+			const category = document.getElementById('edit-category');
+			let isValid = true;
+
+			const fields = [
+				{
+					element: question,
+					value: question.value,
+				},
+				{
+					element: answer,
+					value: answer.value,
+				},
+				{
+					element: category,
+					value: category.value,
+				},
+			];
+
+			fields.forEach((field) => {
+				field.element.nextElementSibling.classList.add('hidden');
+			});
+
+			fields.forEach((field) => {
+				if (!field.value) {
+					field.element.nextElementSibling.classList.remove('hidden');
+					isValid = false;
+				}
+			});
+
+			if (!isValid) {
+				return;
+			}
+
+			flashcardToEdit.question = question.value;
+			flashcardToEdit.answer = answer.value;
+			flashcardToEdit.category = category.value;
+			flashcardToEdit.mastery = 0;
+
+			this._tracker.editCard(id, flashcardToEdit);
+			const flashcardsArr = this._tracker.getAllFlashcards();
+			document.querySelector('.flashcard-container--all-cards').innerHTML = ``;
+			flashcardsArr.forEach((card) => {
+				this._displayNewCardAll(card);
+			});
+
+			modal.close();
+			cleanup();
+		};
+
+		const cancelHandler = () => {
+			modal.close();
+			cleanup();
+		};
+
+		const cleanup = () => {
+			btnConfirm.removeEventListener('click', confirmHandler);
+			btnCancel.removeEventListener('click', cancelHandler);
+		};
+
+		btnConfirm.addEventListener('click', confirmHandler);
+		btnCancel.addEventListener('click', cancelHandler);
 	}
 
 	_showModalDelete() {
