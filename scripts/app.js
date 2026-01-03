@@ -35,7 +35,6 @@ class FlashcardTracker {
 
 		if (index !== -1) {
 			const card = this._flashcards[index];
-			console.log(card);
 			this._totalCards--;
 			if (card.mastery > 0 && card.mastery < 5) {
 				this._totalInProgress--;
@@ -45,6 +44,9 @@ class FlashcardTracker {
 				this._totalMastered--;
 			}
 			this._flashcards.splice(index, 1);
+
+			if (index > this._flashcards.length - 1) this._currentCard = 0;
+			else this._currentCard = index;
 
 			this._render();
 		}
@@ -817,13 +819,30 @@ class App {
 	}
 
 	_deleteCard(e) {
-		console.log(e.target.closest('.flashcard'));
+		const checkbox = document.getElementById('hide-mastered');
 
 		const id = e.target.closest('.flashcard').getAttribute('data-id');
 
 		this._tracker.removeCard(id);
-
 		e.target.closest('.flashcard').remove();
+
+		if (this._tracker.getTotalCards() === 0) {
+			document.querySelector('.no-flashcards').classList.remove('hidden');
+			document
+				.querySelector('.flashcard-container--main')
+				.classList.add('hidden');
+		} else if (
+			this._tracker.getTotalMasteredCards() === this._tracker.getTotalCards() &&
+			this._tracker.getTotalCards() !== 0
+		) {
+			document
+				.querySelector('.flashcard-container--main')
+				.classList.add('hidden');
+			document.querySelector('.all-mastered').classList.remove('hidden');
+			checkbox.checked = true;
+		} else {
+			this._displayCardStudyMode(this._tracker.getCurrentCard());
+		}
 	}
 
 	_loadEventListeners() {
