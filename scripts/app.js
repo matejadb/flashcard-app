@@ -65,8 +65,20 @@ class FlashcardTracker {
 		}
 	}
 
-	editCard(id) {
+	editCard(id, editedCard) {
 		const index = this._flashcards.findIndex((card) => card.id === id);
+
+		if (index !== -1) {
+			this._flashcards[index] = editedCard;
+
+			this._populateCategoryDropdown(editedCard);
+
+			if (!this._categories.includes(editedCard.category.toLowerCase())) {
+				this._categories.push(editedCard.category);
+			}
+
+			this._render();
+		}
 	}
 
 	getCurrentCard() {
@@ -859,7 +871,6 @@ class App {
 		const flashcardToEdit = this._tracker
 			.getAllFlashcards()
 			.filter((card) => card.id === id)[0];
-
 		console.log(flashcardToEdit);
 
 		question.value = flashcardToEdit.question;
@@ -868,7 +879,19 @@ class App {
 
 		this._showModalEdit()
 			.then(() => {
-				console.log('editing');
+				flashcardToEdit.question = question.value;
+				flashcardToEdit.answer = answer.value;
+				flashcardToEdit.category = category.value;
+				flashcardToEdit.mastery = 0;
+
+				this._tracker.editCard(id, flashcardToEdit);
+				const flashcardsArr = this._tracker.getAllFlashcards();
+				document.querySelector(
+					'.flashcard-container--all-cards'
+				).innerHTML = ``;
+				flashcardsArr.forEach((card) => {
+					this._displayNewCardAll(card);
+				});
 			})
 			.catch(() => {});
 	}
