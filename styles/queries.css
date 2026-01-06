@@ -1,0 +1,73 @@
+/*   Tablets    */
+
+@media (max-width: 70em) {
+	.text--preset-1 {
+		font-size: 3.2rem;
+	}
+
+	body {
+		padding: 2rem 3.2rem 6.4rem 3.2rem;
+		gap: 2.4rem;
+	}
+
+	.flashcard-container--all-cards {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.flashcard-container--all-cards .flashcard {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.all-cards-content {
+		padding-bottom: 0;
+	}
+
+	.study-mode-content {
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr auto;
+	}
+
+	.statistics-content {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem;
+	}
+}
+
+/* Phones */
+
+@media (max-width: 40em) {
+	.text--preset-1 {
+		font-size: 2.4rem;
+	}
+
+	.all-cards-section-controls,
+	.flashcard-section-header {
+		align-items: start;
+	}
+
+	.flashcard-actions {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.next-card span,
+	.previous-card span {
+		display: none;
+	}
+
+	.category-filter {
+		flex-direction: column;
+		align-items: start;
+	}
+
+	.flashcard-container--all-cards {
+		grid-template-columns: repeat(1, 1fr);
+	}
+
+	.statistics-content {
+		display: flex;
+		flex-direction: column;
+	}
+}
