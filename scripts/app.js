@@ -29,7 +29,57 @@ class FlashcardTracker {
 		this._render();
 	}
 
-	removeCard(id) {}
+	removeCard(id) {
+		const index = this._flashcards.findIndex((card) => card.id === id);
+
+		if (index !== -1) {
+			const card = this._flashcards[index];
+			this._totalCards--;
+			if (card.mastery > 0 && card.mastery < 5) {
+				this._totalInProgress--;
+			} else if (card.mastery === 0) {
+				this._totalNotStarted--;
+			} else if (card.mastery === 5) {
+				this._totalMastered--;
+			}
+			this._flashcards.splice(index, 1);
+
+			const cardCategory = this._formatCategoryName(card.category);
+			let catNum = this._getNumberOfCategoryType(card.category);
+
+			const dropdownEl = document.querySelectorAll(`.${cardCategory}`);
+
+			dropdownEl.forEach((el) => {
+				if (catNum === 0) {
+					this._categories = this._categories.filter(
+						(cat) => cat !== cardCategory
+					);
+					el.parentElement.remove();
+				} else el.textContent = `${card.category} (${catNum})`;
+			});
+
+			if (index > this._flashcards.length - 1) this._currentCard = 0;
+			else this._currentCard = index;
+
+			this._render();
+		}
+	}
+
+	editCard(id, editedCard) {
+		const index = this._flashcards.findIndex((card) => card.id === id);
+
+		if (index !== -1) {
+			this._flashcards[index] = editedCard;
+
+			this._populateCategoryDropdown(editedCard);
+
+			if (!this._categories.includes(editedCard.category.toLowerCase())) {
+				this._categories.push(editedCard.category);
+			}
+
+			this._render();
+		}
+	}
 
 	getCurrentCard() {
 		return this._flashcards[this._currentCard];
@@ -229,6 +279,8 @@ class FlashcardTracker {
 			'.categories-dropdown--content'
 		);
 
+		categoriesEl.innerHTML = ``;
+
 		categoriesEl.forEach((el) => {
 			const cardCategory = this._formatCategoryName(card.category);
 
@@ -263,12 +315,7 @@ class FlashcardTracker {
 	}
 
 	_getNumberOfCategoryType(category) {
-		const allCategoriesEl = document.querySelectorAll('.count-cat');
-		const typeCategoriesEl = Array.from(allCategoriesEl).filter(
-			(element) => element.textContent === category
-		);
-
-		return typeCategoriesEl.length + 1;
+		return this._flashcards.filter((card) => card.category === category).length;
 	}
 
 	_checkIfCategoryExists(category) {
@@ -556,23 +603,23 @@ class App {
 											aria-labelledby="menu-button"
 											class="menu-dropdown--content hidden"
 										>
-											<div role="menuitem" aria-checked="false" tabindex="0">
+											<button class="btn--edit-card" role="menuitem" aria-checked="false" tabindex="0">
 												<img
 													src="./assets/images/icon-edit.svg"
 													role="presentation"
 													alt=""
 												/>
 												<span class="text--preset-5-medium">Edit</span>
-											</div>
+											</button>
 											<hr />
-											<div role="menuitem" aria-checked="false" tabindex="0">
+											<button class="btn--delete-card" role="menuitem" aria-checked="false" tabindex="0">
 												<img
 													src="./assets/images/icon-delete.svg"
 													role="presentation"
 													alt=""
 												/>
 												<span class="text--preset-5-medium">Delete</span>
-											</div>
+											</button>
 											<hr />
 										</div>
 									</div>
@@ -720,6 +767,7 @@ class App {
 
 	_toggleCategoryDropdown(e) {
 		e.stopPropagation();
+
 		const btn = e.currentTarget;
 		const dropdown = btn.nextElementSibling;
 
@@ -793,6 +841,163 @@ class App {
 		this._displayCardStudyMode(flashcards[0]);
 	}
 
+	_showModalEdit() {
+		return new Promise((resolve, reject) => {
+			const yesHandler = () => {
+				modal.close();
+				resolve();
+			};
+
+			const noHandler = () => {
+				modal.close();
+				reject();
+			};
+
+			btnConfirm.addEventListener('click', yesHandler, { once: true });
+			btnCancel.addEventListener('click', noHandler, { once: true });
+		});
+	}
+
+	_editCard(e) {
+		const question = document.getElementById('edit-question');
+		const answer = document.getElementById('edit-answer');
+		const category = document.getElementById('edit-category');
+
+		const flashcard = e.target.closest('.flashcard');
+		const id = flashcard.getAttribute('data-id');
+		const flashcardToEdit = this._tracker
+			.getAllFlashcards()
+			.filter((card) => card.id === id)[0];
+
+		question.value = flashcardToEdit.question;
+		answer.value = flashcardToEdit.answer;
+		category.value = flashcardToEdit.category;
+
+		const modal = document.querySelector('.confirm--edit');
+		const btnConfirm = document.querySelector('.btn--confirm-edit');
+		const btnCancel = document.querySelector('.btn--cancel-edit');
+		modal.showModal();
+
+		const confirmHandler = () => {
+			const question = document.getElementById('edit-question');
+			const answer = document.getElementById('edit-answer');
+			const category = document.getElementById('edit-category');
+			let isValid = true;
+
+			const fields = [
+				{
+					element: question,
+					value: question.value,
+				},
+				{
+					element: answer,
+					value: answer.value,
+				},
+				{
+					element: category,
+					value: category.value,
+				},
+			];
+
+			fields.forEach((field) => {
+				field.element.nextElementSibling.classList.add('hidden');
+			});
+
+			fields.forEach((field) => {
+				if (!field.value) {
+					field.element.nextElementSibling.classList.remove('hidden');
+					isValid = false;
+				}
+			});
+
+			if (!isValid) {
+				return;
+			}
+
+			flashcardToEdit.question = question.value;
+			flashcardToEdit.answer = answer.value;
+			flashcardToEdit.category = category.value;
+			flashcardToEdit.mastery = 0;
+
+			this._tracker.editCard(id, flashcardToEdit);
+			const flashcardsArr = this._tracker.getAllFlashcards();
+			document.querySelector('.flashcard-container--all-cards').innerHTML = ``;
+			flashcardsArr.forEach((card) => {
+				this._displayNewCardAll(card);
+			});
+			this._displayCardStudyMode(this._tracker.getCurrentCard());
+			modal.close();
+			cleanup();
+		};
+
+		const cancelHandler = () => {
+			modal.close();
+			cleanup();
+		};
+
+		const cleanup = () => {
+			btnConfirm.removeEventListener('click', confirmHandler);
+			btnCancel.removeEventListener('click', cancelHandler);
+		};
+
+		btnConfirm.addEventListener('click', confirmHandler);
+		btnCancel.addEventListener('click', cancelHandler);
+	}
+
+	_showModalDelete() {
+		const modal = document.querySelector('.confirm--delete');
+		const btnConfirm = document.querySelector('.btn--confirm-delete');
+		const btnCancel = document.querySelector('.btn--cancel-delete');
+		modal.showModal();
+
+		return new Promise((resolve, reject) => {
+			const yesHandler = () => {
+				modal.close();
+				resolve();
+			};
+
+			const noHandler = () => {
+				modal.close();
+				reject();
+			};
+
+			btnConfirm.addEventListener('click', yesHandler, { once: true });
+			btnCancel.addEventListener('click', noHandler, { once: true });
+		});
+	}
+
+	_deleteCard(e) {
+		const checkbox = document.getElementById('hide-mastered');
+
+		this._showModalDelete()
+			.then(() => {
+				const id = e.target.closest('.flashcard').getAttribute('data-id');
+
+				this._tracker.removeCard(id);
+				e.target.closest('.flashcard').remove();
+
+				if (this._tracker.getTotalCards() === 0) {
+					document.querySelector('.no-flashcards').classList.remove('hidden');
+					document
+						.querySelector('.flashcard-container--main')
+						.classList.add('hidden');
+				} else if (
+					this._tracker.getTotalMasteredCards() ===
+						this._tracker.getTotalCards() &&
+					this._tracker.getTotalCards() !== 0
+				) {
+					document
+						.querySelector('.flashcard-container--main')
+						.classList.add('hidden');
+					document.querySelector('.all-mastered').classList.remove('hidden');
+					checkbox.checked = true;
+				} else {
+					this._displayCardStudyMode(this._tracker.getCurrentCard());
+				}
+			})
+			.catch(() => {});
+	}
+
 	_loadEventListeners() {
 		document
 			.querySelector('.form--new-card')
@@ -855,6 +1060,18 @@ class App {
 		document
 			.querySelector('#hide-mastered')
 			.addEventListener('change', this._hideMasteredStudyMode.bind(this));
+
+		document.addEventListener('click', (e) => {
+			if (e.target.closest('.btn--edit-card')) {
+				e.stopPropagation();
+				this._editCard(e);
+			}
+
+			if (e.target.closest('.btn--delete-card')) {
+				e.stopPropagation();
+				this._deleteCard(e);
+			}
+		});
 	}
 }
 
