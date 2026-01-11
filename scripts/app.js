@@ -656,7 +656,9 @@ class App {
 		cardEl.setAttribute('data-id', card.id);
 
 		// Count visible cards (not hidden)
-		const visibleCards = cardsEl.querySelectorAll('.flashcard:not(.flashcard-hidden)');
+		const visibleCards = cardsEl.querySelectorAll(
+			'.flashcard:not(.flashcard-hidden)'
+		);
 		if (visibleCards.length >= 12) {
 			cardEl.classList.add('flashcard-hidden');
 		}
@@ -1129,7 +1131,9 @@ class App {
 		btnLoadMore.addEventListener('click', (e) => {
 			e.preventDefault();
 
-			const container = document.querySelector('.flashcard-container--all-cards');
+			const container = document.querySelector(
+				'.flashcard-container--all-cards'
+			);
 			if (!container) return;
 
 			Array.from(container.querySelectorAll('.flashcard-hidden'))
