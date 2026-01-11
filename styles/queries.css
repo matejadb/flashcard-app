@@ -182,6 +182,14 @@
 		flex-direction: column;
 	}
 
+	.flashcards-hint {
+		width: 100%;
+	}
+
+	.no-cards--all-cards {
+		text-align: center;
+	}
+
 	.statistics-card {
 		width: 100%;
 	}
