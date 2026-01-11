@@ -22,7 +22,8 @@ class FlashcardTracker {
 		this._totalNotStarted++;
 
 		this._populateCategoryDropdown(card);
-		if (!this._categories.includes(card.category.toLowerCase())) {
+		if (!this._categories.includes(card.category)) {
+			// Remove .toLowerCase() - keep original case
 			this._categories.push(card.category);
 		}
 
@@ -51,11 +52,21 @@ class FlashcardTracker {
 
 			dropdownEl.forEach((el) => {
 				if (catNum === 0) {
+					// Remove from categories array using the original category name, not formatted
 					this._categories = this._categories.filter(
-						(cat) => cat !== cardCategory
+						(cat) => cat !== card.category
 					);
-					el.parentElement.remove();
-				} else el.textContent = `${card.category} (${catNum})`;
+					// Remove the parent menuitemcheckbox div
+					const menuItem = el.closest('div[role="menuitemcheckbox"]');
+					// Remove the following hr if it exists
+					const nextHr = menuItem?.nextElementSibling;
+					if (nextHr?.tagName === 'HR') {
+						nextHr.remove();
+					}
+					menuItem.remove();
+				} else {
+					el.textContent = `${card.category} (${catNum})`;
+				}
 			});
 
 			if (index > this._flashcards.length - 1) this._currentCard = 0;
@@ -67,13 +78,72 @@ class FlashcardTracker {
 
 	editCard(id, editedCard) {
 		const index = this._flashcards.findIndex((card) => card.id === id);
+		console.log(editedCard);
+
+		console.log(this._flashcards[index]);
 
 		if (index !== -1) {
+			// Store the old category VALUE, not the object reference
+			const oldCategory = this._flashcards[index].category;
+
+			console.log('Old category:', oldCategory);
+			console.log(
+				'Old category count BEFORE update:',
+				this._getNumberOfCategoryType(oldCategory)
+			);
+
+			// Check old category count BEFORE updating the card
+			const oldCatNum = this._getNumberOfCategoryType(oldCategory);
+
+			// Update the card
 			this._flashcards[index] = editedCard;
 
+			console.log(
+				'Old category count AFTER update:',
+				this._getNumberOfCategoryType(oldCategory)
+			);
+			console.log('New category:', editedCard.category);
+			console.log(
+				'New category count:',
+				this._getNumberOfCategoryType(editedCard.category)
+			);
+
+			// Handle old category count decrease
+			if (oldCategory !== editedCard.category) {
+				const oldCategoryFormatted = this._formatCategoryName(oldCategory);
+				console.log('Formatted old category:', oldCategoryFormatted);
+
+				const oldDropdownEl = document.querySelectorAll(
+					`.${oldCategoryFormatted}`
+				);
+
+				console.log('Found old dropdown elements:', oldDropdownEl.length);
+
+				oldDropdownEl.forEach((el) => {
+					console.log('Old cat num:', oldCatNum);
+					if (oldCatNum === 1) {
+						console.log('Removing category from dropdown');
+						this._categories = this._categories.filter(
+							(cat) => cat !== oldCategory
+						);
+						el.closest('div[role="menuitemcheckbox"]').remove();
+						const nextHr = el.closest(
+							'div[role="menuitemcheckbox"]'
+						)?.nextElementSibling;
+						if (nextHr?.tagName === 'HR') {
+							nextHr.remove();
+						}
+					} else {
+						console.log('Updating old category count to:', oldCatNum - 1);
+						el.textContent = `${oldCategory} (${oldCatNum - 1})`;
+					}
+				});
+			}
+
+			// Handle new category
 			this._populateCategoryDropdown(editedCard);
 
-			if (!this._categories.includes(editedCard.category.toLowerCase())) {
+			if (!this._categories.includes(editedCard.category)) {
 				this._categories.push(editedCard.category);
 			}
 
@@ -914,12 +984,16 @@ class App {
 				return;
 			}
 
-			flashcardToEdit.question = question.value;
-			flashcardToEdit.answer = answer.value;
-			flashcardToEdit.category = category.value;
-			flashcardToEdit.mastery = 0;
+			// Create a NEW object instead of modifying the existing one
+			const editedCard = {
+				id: flashcardToEdit.id,
+				question: question.value,
+				answer: answer.value,
+				category: category.value,
+				mastery: flashcardToEdit.mastery, // Keep the same mastery level
+			};
 
-			this._tracker.editCard(id, flashcardToEdit);
+			this._tracker.editCard(id, editedCard);
 			const flashcardsArr = this._tracker.getAllFlashcards();
 			document.querySelector('.flashcard-container--all-cards').innerHTML = ``;
 			flashcardsArr.forEach((card) => {
