@@ -23,7 +23,6 @@ class FlashcardTracker {
 
 		this._populateCategoryDropdown(card);
 		if (!this._categories.includes(card.category)) {
-			// Remove .toLowerCase() - keep original case
 			this._categories.push(card.category);
 		}
 
@@ -420,6 +419,35 @@ class App {
 		this._loadEventListeners();
 	}
 
+	_syncLoadMoreVisibility() {
+		const pagination = document.querySelector('.pagination');
+		if (!pagination) return;
+
+		const hasHiddenCards =
+			document.querySelectorAll(
+				'.flashcard-container--all-cards .flashcard-hidden'
+			).length > 0;
+
+		pagination.classList.toggle('hidden', !hasHiddenCards);
+	}
+
+	_fillAllCardsUpTo(limit = 12) {
+		const container = document.querySelector('.flashcard-container--all-cards');
+		if (!container) return;
+
+		const visibleCount = container.querySelectorAll(
+			'.flashcard:not(.flashcard-hidden)'
+		).length;
+		const toReveal = Math.max(0, limit - visibleCount);
+		if (toReveal === 0) return;
+
+		Array.from(container.querySelectorAll('.flashcard-hidden'))
+			.slice(0, toReveal)
+			.forEach((cardEl) => {
+				cardEl.classList.remove('flashcard-hidden');
+			});
+	}
+
 	_hideMasteredAllCards() {
 		const checkbox = document.getElementById('hide-mastered--all-cards');
 		document.querySelector('.flashcard-container--all-cards').innerHTML = ``;
@@ -440,6 +468,9 @@ class App {
 				this._displayNewCardAll(card);
 			});
 		}
+
+		this._fillAllCardsUpTo(12);
+		this._syncLoadMoreVisibility();
 	}
 	_hideMasteredStudyMode() {
 		const checkbox = document.getElementById('hide-mastered');
@@ -624,6 +655,12 @@ class App {
 		cardEl.classList.add('flashcard');
 		cardEl.setAttribute('data-id', card.id);
 
+		// Count visible cards (not hidden)
+		const visibleCards = cardsEl.querySelectorAll('.flashcard:not(.flashcard-hidden)');
+		if (visibleCards.length >= 12) {
+			cardEl.classList.add('flashcard-hidden');
+		}
+
 		const isMastered = card.mastery >= 5;
 		const barClass = isMastered ? 'bar hidden' : 'bar';
 		const masteredClass = isMastered ? 'card-mastered' : 'card-mastered hidden';
@@ -709,6 +746,7 @@ class App {
 							</div>`;
 
 		cardsEl.appendChild(cardEl);
+		this._syncLoadMoreVisibility();
 	}
 
 	_displayCardNumber() {
@@ -781,6 +819,10 @@ class App {
 		question.value = '';
 		answer.value = '';
 		category.value = '';
+	}
+
+	_showLoadMore() {
+		this._syncLoadMoreVisibility();
 	}
 
 	_revealAnswer() {
@@ -908,6 +950,8 @@ class App {
 		flashcards.forEach((card) => {
 			this._displayNewCardAll(card);
 		});
+		this._fillAllCardsUpTo(12);
+		this._syncLoadMoreVisibility();
 		this._displayCardStudyMode(flashcards[0]);
 	}
 
@@ -984,13 +1028,12 @@ class App {
 				return;
 			}
 
-			// Create a NEW object instead of modifying the existing one
 			const editedCard = {
 				id: flashcardToEdit.id,
 				question: question.value,
 				answer: answer.value,
 				category: category.value,
-				mastery: flashcardToEdit.mastery, // Keep the same mastery level
+				mastery: flashcardToEdit.mastery,
 			};
 
 			this._tracker.editCard(id, editedCard);
@@ -999,6 +1042,8 @@ class App {
 			flashcardsArr.forEach((card) => {
 				this._displayNewCardAll(card);
 			});
+			this._fillAllCardsUpTo(12);
+			this._syncLoadMoreVisibility();
 			this._displayCardStudyMode(this._tracker.getCurrentCard());
 			modal.close();
 			cleanup();
@@ -1049,6 +1094,8 @@ class App {
 
 				this._tracker.removeCard(id);
 				e.target.closest('.flashcard').remove();
+				this._fillAllCardsUpTo(12);
+				this._syncLoadMoreVisibility();
 
 				if (this._tracker.getTotalCards() === 0) {
 					document.querySelector('.no-flashcards').classList.remove('hidden');
@@ -1072,7 +1119,32 @@ class App {
 			.catch(() => {});
 	}
 
+	_loadMore() {
+		const btnLoadMore = document.querySelector('.btn--load-more');
+		if (!btnLoadMore) return;
+
+		const cardsPerLoad = 12;
+		this._syncLoadMoreVisibility();
+
+		btnLoadMore.addEventListener('click', (e) => {
+			e.preventDefault();
+
+			const container = document.querySelector('.flashcard-container--all-cards');
+			if (!container) return;
+
+			Array.from(container.querySelectorAll('.flashcard-hidden'))
+				.slice(0, cardsPerLoad)
+				.forEach((cardEl) => {
+					cardEl.classList.remove('flashcard-hidden');
+				});
+
+			this._syncLoadMoreVisibility();
+		});
+	}
+
 	_loadEventListeners() {
+		this._loadMore();
+
 		document
 			.querySelector('.form--new-card')
 			.addEventListener('submit', this._newCard.bind(this));

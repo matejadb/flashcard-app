@@ -498,3 +498,7 @@
 .hidden {
 	display: none;
 }
+
+.flashcard-hidden {
+	display: none;
+}
