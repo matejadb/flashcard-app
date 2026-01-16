@@ -6,7 +6,7 @@ class FlashcardTracker {
 		this._totalNotStarted = Storage.getTotalNotStartedCards();
 		this._currentCard = Storage.getCurrentCardId();
 		this._flashcards = Storage.getFlashcards();
-		this._categories = [];
+		this._categories = Storage.getCategories();
 
 		this._displayTotalCards();
 		this._displayTotalMastered();
@@ -23,9 +23,11 @@ class FlashcardTracker {
 		Storage.updateTotalCards(this._totalCards);
 		Storage.updateTotalNotStartedCards(this._totalNotStarted);
 		Storage.saveFlashcard(card);
+
 		this._populateCategoryDropdown(card);
 		if (!this._categories.includes(card.category)) {
 			this._categories.push(card.category);
+			Storage.saveCategory(card.category);
 		}
 
 		this._showToastNotification('create');
@@ -139,9 +141,9 @@ class FlashcardTracker {
 		}
 	}
 
-	getCurrentCard() {
-		return this._flashcards[this._currentCard];
-	}
+	// getCurrentCard() {
+	// 	return this._flashcards[this._currentCard];
+	// }
 
 	// getAllFlashcards() {
 	// 	return this._flashcards;
@@ -529,6 +531,27 @@ class Storage {
 		flashcards.push(card);
 		localStorage.setItem('flashcards', JSON.stringify(flashcards));
 	}
+
+	static getCategories() {
+		let categories;
+
+		if (localStorage.getItem('categories') === null) categories = [];
+		else categories = JSON.parse(localStorage.getItem('categories'));
+
+		return categories;
+	}
+
+	static saveCategory(category) {
+		const categories = Storage.getCategories();
+		categories.push(category);
+		localStorage.setItem('categories', JSON.stringify(categories));
+	}
+
+	static getCurrentCard() {
+		const flashcards = Storage.getFlashcards();
+
+		return flashcards[Storage.getCurrentCardId()];
+	}
 }
 
 class App {
@@ -549,7 +572,7 @@ class App {
 		});
 
 		// Display only the current card in study mode
-		this._displayCardStudyMode(this._tracker.getCurrentCard());
+		this._displayCardStudyMode(Storage.getCurrentCard());
 		this._hideNoCardHint();
 		this._displayCardNumber();
 	}
@@ -635,7 +658,7 @@ class App {
 					.classList.remove('hidden');
 			}
 
-			const currentCard = this._tracker.getCurrentCard();
+			const currentCard = Storage.getCurrentCard();
 			this._displayCardStudyMode(currentCard);
 		}
 	}
@@ -947,7 +970,7 @@ class App {
 
 		this._tracker.addCard(card);
 		this._displayNewCardAll(card);
-		this._displayCardStudyMode(this._tracker.getCurrentCard());
+		this._displayCardStudyMode(Storage.getCurrentCard());
 		this._hideNoCardHint();
 		question.value = '';
 		answer.value = '';
@@ -1062,7 +1085,7 @@ class App {
 	}
 
 	_incrementMastery() {
-		const currentCard = this._tracker.getCurrentCard();
+		const currentCard = Storage.getCurrentCard();
 		if (currentCard.mastery < 5) {
 			this._tracker.incrementMastery(currentCard);
 			this._displayCardStudyMode(currentCard);
@@ -1070,7 +1093,7 @@ class App {
 	}
 
 	_resetMastery() {
-		const currentCard = this._tracker.getCurrentCard();
+		const currentCard = Storage.getCurrentCard();
 		if (currentCard.mastery > 0) {
 			this._tracker.resetMastery(currentCard);
 			this._displayCardStudyMode(currentCard);
@@ -1179,7 +1202,7 @@ class App {
 			});
 			this._fillAllCardsUpTo(12);
 			this._syncLoadMoreVisibility();
-			this._displayCardStudyMode(this._tracker.getCurrentCard());
+			this._displayCardStudyMode(Storage.getCurrentCard());
 			modal.close();
 			cleanup();
 		};
@@ -1247,7 +1270,7 @@ class App {
 					document.querySelector('.all-mastered').classList.remove('hidden');
 					checkbox.checked = true;
 				} else {
-					this._displayCardStudyMode(this._tracker.getCurrentCard());
+					this._displayCardStudyMode(Storage.getCurrentCard());
 				}
 			})
 			.catch(() => {});
