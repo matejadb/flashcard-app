@@ -26,6 +26,7 @@ class FlashcardTracker {
 			this._categories.push(card.category);
 		}
 
+		this._showToastNotification('create');
 		this._render();
 	}
 
@@ -71,25 +72,17 @@ class FlashcardTracker {
 			if (index > this._flashcards.length - 1) this._currentCard = 0;
 			else this._currentCard = index;
 
+			this._showToastNotification('delete');
 			this._render();
 		}
 	}
 
 	editCard(id, editedCard) {
 		const index = this._flashcards.findIndex((card) => card.id === id);
-		console.log(editedCard);
-
-		console.log(this._flashcards[index]);
 
 		if (index !== -1) {
 			// Store the old category VALUE, not the object reference
 			const oldCategory = this._flashcards[index].category;
-
-			console.log('Old category:', oldCategory);
-			console.log(
-				'Old category count BEFORE update:',
-				this._getNumberOfCategoryType(oldCategory)
-			);
 
 			// Check old category count BEFORE updating the card
 			const oldCatNum = this._getNumberOfCategoryType(oldCategory);
@@ -97,31 +90,16 @@ class FlashcardTracker {
 			// Update the card
 			this._flashcards[index] = editedCard;
 
-			console.log(
-				'Old category count AFTER update:',
-				this._getNumberOfCategoryType(oldCategory)
-			);
-			console.log('New category:', editedCard.category);
-			console.log(
-				'New category count:',
-				this._getNumberOfCategoryType(editedCard.category)
-			);
-
 			// Handle old category count decrease
 			if (oldCategory !== editedCard.category) {
 				const oldCategoryFormatted = this._formatCategoryName(oldCategory);
-				console.log('Formatted old category:', oldCategoryFormatted);
 
 				const oldDropdownEl = document.querySelectorAll(
 					`.${oldCategoryFormatted}`
 				);
 
-				console.log('Found old dropdown elements:', oldDropdownEl.length);
-
 				oldDropdownEl.forEach((el) => {
-					console.log('Old cat num:', oldCatNum);
 					if (oldCatNum === 1) {
-						console.log('Removing category from dropdown');
 						this._categories = this._categories.filter(
 							(cat) => cat !== oldCategory
 						);
@@ -133,7 +111,6 @@ class FlashcardTracker {
 							nextHr.remove();
 						}
 					} else {
-						console.log('Updating old category count to:', oldCatNum - 1);
 						el.textContent = `${oldCategory} (${oldCatNum - 1})`;
 					}
 				});
@@ -146,6 +123,7 @@ class FlashcardTracker {
 				this._categories.push(editedCard.category);
 			}
 
+			this._showToastNotification('update');
 			this._render();
 		}
 	}
@@ -392,6 +370,36 @@ class FlashcardTracker {
 
 		if (arr.length !== 0) {
 		}
+	}
+
+	_showToastNotification(type) {
+		const toastCreated = document.querySelector('.card--created');
+		const toastUpdated = document.querySelector('.card--updated');
+		const toastDeleted = document.querySelector('.card--deleted');
+
+		switch (type) {
+			case 'create':
+				this._hideToast(toastCreated);
+				break;
+
+			case 'update':
+				this._hideToast(toastUpdated);
+				break;
+
+			case 'delete':
+				this._hideToast(toastDeleted);
+				break;
+		}
+	}
+
+	_hideToast(toast) {
+		toast.classList.remove('hidden');
+
+		setTimeout(() => {
+			if (!toast.classList.contains('hidden')) {
+				toast.classList.add('hidden');
+			}
+		}, 3000);
 	}
 
 	_render() {
@@ -1148,6 +1156,10 @@ class App {
 		});
 	}
 
+	_closeToastNotification(e) {
+		e.target.parentElement.parentElement.classList.add('hidden');
+	}
+
 	_loadEventListeners() {
 		this._loadMore();
 
@@ -1157,6 +1169,10 @@ class App {
 
 		document.querySelectorAll('.category-btn').forEach((btn) => {
 			btn.addEventListener('click', this._toggleCategoryDropdown.bind(this));
+		});
+
+		document.querySelectorAll('.close-toast').forEach((btn) => {
+			btn.addEventListener('click', this._closeToastNotification.bind(this));
 		});
 
 		document.addEventListener('click', (e) => {
