@@ -33,6 +33,13 @@
 		grid-template-columns: repeat(2, 1fr);
 		gap: 2rem;
 	}
+
+	.card--created,
+	.card--updated,
+	.card--deleted {
+		top: 11.6rem;
+		right: 1rem;
+	}
 }
 
 /* Phones */
@@ -192,5 +199,12 @@
 
 	.statistics-card {
 		width: 100%;
+	}
+
+	.card--created,
+	.card--updated,
+	.card--deleted {
+		top: 10.5rem;
+		right: 0.5rem;
 	}
 }
