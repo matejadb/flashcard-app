@@ -882,6 +882,8 @@ class App {
 	_toggleCategoryDropdown(e) {
 		e.stopPropagation();
 
+		if (this._tracker.getTotalCards() === 0) return;
+
 		const btn = e.currentTarget;
 		const dropdown = btn.nextElementSibling;
 

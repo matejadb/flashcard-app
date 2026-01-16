@@ -495,10 +495,35 @@
 }
 /*------------------------------------------*/
 
-.hidden {
+.flashcard-hidden {
 	display: none;
 }
 
-.flashcard-hidden {
+.card--created,
+.card--updated,
+.card--deleted {
+	position: absolute;
+	top: 11.6rem;
+	right: 6rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 1.6rem;
+	width: 30rem;
+	border-radius: 999px;
+	background-color: var(--neutral-0);
+	border: 1px solid var(--neutral-900);
+	box-shadow: 2px 2px 0 0 var(--neutral-900), 0 3px 8px 0 rgba(46, 20, 1, 0.2);
+}
+
+.close-toast {
+	cursor: pointer;
+	background: transparent;
+	border: transparent;
+	display: flex;
+	align-items: center;
+}
+
+.hidden {
 	display: none;
 }
