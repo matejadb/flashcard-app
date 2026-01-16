@@ -141,24 +141,16 @@ class FlashcardTracker {
 		}
 	}
 
-	// getCurrentCard() {
-	// 	return this._flashcards[this._currentCard];
-	// }
+	getCurrentCard() {
+		return this._flashcards[this._currentCard];
+	}
 
-	// getAllFlashcards() {
-	// 	return this._flashcards;
-	// }
+	getAllFlashcards() {
+		return this._flashcards;
+	}
 
 	// getCurrentCardId() {
 	// 	return this._currentCard;
-	// }
-
-	// getTotalCards() {
-	// 	return this._totalCards;
-	// }
-
-	// getTotalMasteredCards() {
-	// 	return this._totalMastered;
 	// }
 
 	getNextCard() {
@@ -250,6 +242,8 @@ class FlashcardTracker {
 		}
 
 		card.mastery++;
+
+		localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 		const allCardElements = document.querySelectorAll(
 			`[data-id="${card.id}"] .progress-bar`
@@ -621,7 +615,7 @@ class App {
 				}`;
 			});
 		} else {
-			const flashcards = Storage.getAllFlashcards();
+			const flashcards = this._tracker.getAllFlashcards();
 			flashcards.forEach((card) => {
 				this._displayNewCardAll(card);
 			});
@@ -630,6 +624,7 @@ class App {
 		this._fillAllCardsUpTo(12);
 		this._syncLoadMoreVisibility();
 	}
+
 	_hideMasteredStudyMode() {
 		const checkbox = document.getElementById('hide-mastered');
 		if (Storage.getTotalCards() === 0) return;
@@ -1085,7 +1080,8 @@ class App {
 	}
 
 	_incrementMastery() {
-		const currentCard = Storage.getCurrentCard();
+		const currentCard = this._tracker.getCurrentCard();
+
 		if (currentCard.mastery < 5) {
 			this._tracker.incrementMastery(currentCard);
 			this._displayCardStudyMode(currentCard);
@@ -1093,7 +1089,7 @@ class App {
 	}
 
 	_resetMastery() {
-		const currentCard = Storage.getCurrentCard();
+		const currentCard = this._tracker.getCurrentCard();
 		if (currentCard.mastery > 0) {
 			this._tracker.resetMastery(currentCard);
 			this._displayCardStudyMode(currentCard);
@@ -1102,6 +1098,8 @@ class App {
 
 	_shuffleCards() {
 		const flashcards = this._tracker.shuffleCards();
+
+		if (!flashcards || flashcards.length === 0) return;
 
 		document.querySelector('.flashcard-container--all-cards').innerHTML = '';
 
@@ -1195,7 +1193,7 @@ class App {
 			};
 
 			this._tracker.editCard(id, editedCard);
-			const flashcardsArr = Storage.getAllFlashcards();
+			const flashcardsArr = this._tracker.getAllFlashcards();
 			document.querySelector('.flashcard-container--all-cards').innerHTML = ``;
 			flashcardsArr.forEach((card) => {
 				this._displayNewCardAll(card);
