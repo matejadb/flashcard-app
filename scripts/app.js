@@ -12,6 +12,7 @@ class FlashcardTracker {
 		this._displayTotalMastered();
 		this._displayTotalInProgress();
 		this._displayTotalNotStarted();
+		this._loadCategoryDropdown();
 	}
 
 	/* Public Methods */
@@ -348,7 +349,7 @@ class FlashcardTracker {
 			'.categories-dropdown--content',
 		);
 
-		categoriesEl.innerHTML = ``;
+		// categoriesEl.innerHTML = ``;
 
 		categoriesEl.forEach((el) => {
 			const cardCategory = this._formatCategoryName(card.category);
@@ -375,6 +376,27 @@ class FlashcardTracker {
 				${card.category} (${this._getNumberOfCategoryType(card.category)})
 				</label>`;
 				el.append(categoryEl, divider);
+			}
+		});
+	}
+
+	_loadCategoryDropdown() {
+		const uniqueCategories = [
+			...new Set(this._flashcards.map((card) => card.category)),
+		];
+
+		uniqueCategories.forEach((category) => {
+			const card = this._flashcards.find((c) => c.category === category);
+
+			const categoryIndex = this._categories.indexOf(category);
+			if (categoryIndex > -1) {
+				this._categories.splice(categoryIndex, 1);
+			}
+
+			this._populateCategoryDropdown(card);
+
+			if (!this._categories.includes(category)) {
+				this._categories.push(category);
 			}
 		});
 	}
