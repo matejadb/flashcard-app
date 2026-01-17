@@ -62,7 +62,7 @@ class FlashcardTracker {
 				if (catNum === 0) {
 					// Remove from categories array using the original category name, not formatted
 					this._categories = this._categories.filter(
-						(cat) => cat !== card.category
+						(cat) => cat !== card.category,
 					);
 					// Remove the parent menuitemcheckbox div
 					const menuItem = el.closest('div[role="menuitemcheckbox"]');
@@ -108,17 +108,17 @@ class FlashcardTracker {
 				const oldCategoryFormatted = this._formatCategoryName(oldCategory);
 
 				const oldDropdownEl = document.querySelectorAll(
-					`.${oldCategoryFormatted}`
+					`.${oldCategoryFormatted}`,
 				);
 
 				oldDropdownEl.forEach((el) => {
 					if (oldCatNum === 1) {
 						this._categories = this._categories.filter(
-							(cat) => cat !== oldCategory
+							(cat) => cat !== oldCategory,
 						);
 						el.closest('div[role="menuitemcheckbox"]').remove();
 						const nextHr = el.closest(
-							'div[role="menuitemcheckbox"]'
+							'div[role="menuitemcheckbox"]',
 						)?.nextElementSibling;
 						if (nextHr?.tagName === 'HR') {
 							nextHr.remove();
@@ -246,7 +246,7 @@ class FlashcardTracker {
 		localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 		const allCardElements = document.querySelectorAll(
-			`[data-id="${card.id}"] .progress-bar`
+			`[data-id="${card.id}"] .progress-bar`,
 		);
 		allCardElements.forEach((bar) => {
 			bar.setAttribute('aria-valuenow', card.mastery);
@@ -286,12 +286,13 @@ class FlashcardTracker {
 		});
 
 		const allCardElements = document.querySelectorAll(
-			`[data-id="${card.id}"] .progress-bar`
+			`[data-id="${card.id}"] .progress-bar`,
 		);
 		allCardElements.forEach((bar) => {
 			bar.setAttribute('aria-valuenow', card.mastery);
 			bar.setAttribute('data-progress', card.mastery);
 		});
+		localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 		document
 			.querySelectorAll(`[data-id="${card.id}"] .progress-level`)
@@ -344,7 +345,7 @@ class FlashcardTracker {
 
 	_populateCategoryDropdown(card) {
 		const categoriesEl = document.querySelectorAll(
-			'.categories-dropdown--content'
+			'.categories-dropdown--content',
 		);
 
 		categoriesEl.innerHTML = ``;
@@ -363,13 +364,13 @@ class FlashcardTracker {
 
 				categoryLabel.forEach((label) => {
 					label.innerHTML = `${card.category} (${this._getNumberOfCategoryType(
-						card.category
+						card.category,
 					)})`;
 				});
 			} else {
 				categoryEl.innerHTML = `<input type="checkbox" id="cat-${cardCategory}" class="dropdown-element" />
 				<label for="cat-${this._formatCategoryName(
-					card.category
+					card.category,
 				)}" class="text--preset-5-medium ${cardCategory}">
 				${card.category} (${this._getNumberOfCategoryType(card.category)})
 				</label>`;
@@ -577,7 +578,7 @@ class App {
 
 		const hasHiddenCards =
 			document.querySelectorAll(
-				'.flashcard-container--all-cards .flashcard-hidden'
+				'.flashcard-container--all-cards .flashcard-hidden',
 			).length > 0;
 
 		pagination.classList.toggle('hidden', !hasHiddenCards);
@@ -588,7 +589,7 @@ class App {
 		if (!container) return;
 
 		const visibleCount = container.querySelectorAll(
-			'.flashcard:not(.flashcard-hidden)'
+			'.flashcard:not(.flashcard-hidden)',
 		).length;
 		const toReveal = Math.max(0, limit - visibleCount);
 		if (toReveal === 0) return;
@@ -670,10 +671,10 @@ class App {
 		const checkbox = document.getElementById('hide-mastered');
 		const flashcardContainer = document.querySelector('.flashcard-content');
 		const flashcardQuestionContainer = document.querySelector(
-			'.flashcard-content-question'
+			'.flashcard-content-question',
 		);
 		const flashcardAnswerContainer = document.querySelector(
-			'.flashcard-content-answer'
+			'.flashcard-content-answer',
 		);
 
 		flashcardQuestionContainer.setAttribute('data-id', card.id);
@@ -783,7 +784,7 @@ class App {
 
 		flashcardContainer.append(
 			flashcardQuestionContainer,
-			flashcardAnswerContainer
+			flashcardAnswerContainer,
 		);
 
 		if (checkbox.checked) {
@@ -806,7 +807,7 @@ class App {
 
 		// Count visible cards (not hidden)
 		const visibleCards = cardsEl.querySelectorAll(
-			'.flashcard:not(.flashcard-hidden)'
+			'.flashcard:not(.flashcard-hidden)',
 		);
 		if (visibleCards.length >= 12) {
 			cardEl.classList.add('flashcard-hidden');
@@ -1052,14 +1053,14 @@ class App {
 
 	_closeDropdowns(event) {
 		const categoriesDropdowns = document.querySelectorAll(
-			'.categories-dropdown'
+			'.categories-dropdown',
 		);
 		const menuDropdowns = document.querySelectorAll('.menu-container');
 
 		event.stopPropagation();
 		categoriesDropdowns.forEach((dropdown) => {
 			const dropdownContent = dropdown.querySelector(
-				'.categories-dropdown--content'
+				'.categories-dropdown--content',
 			);
 			const dropdownBtn = dropdown.querySelector('.category-btn');
 			if (!dropdown.contains(event.target)) {
@@ -1285,7 +1286,7 @@ class App {
 			e.preventDefault();
 
 			const container = document.querySelector(
-				'.flashcard-container--all-cards'
+				'.flashcard-container--all-cards',
 			);
 			if (!container) return;
 
