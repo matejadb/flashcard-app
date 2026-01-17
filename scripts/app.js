@@ -69,7 +69,7 @@ class FlashcardTracker {
 					const menuItem = el.closest('div[role="menuitemcheckbox"]');
 					// Remove the following hr if it exists
 					const nextHr = menuItem?.nextElementSibling;
-					if (nextHr?.tagName === 'HR') {
+					if (nextHr?.tagName === 'hr') {
 						nextHr.remove();
 					}
 					menuItem.remove();
@@ -85,6 +85,8 @@ class FlashcardTracker {
 				this._currentCard = index;
 				Storage.updateCurrentCardId(this._currentCard);
 			}
+
+			localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 			this._showToastNotification('delete');
 			this._render();
@@ -117,6 +119,7 @@ class FlashcardTracker {
 						this._categories = this._categories.filter(
 							(cat) => cat !== oldCategory,
 						);
+
 						el.closest('div[role="menuitemcheckbox"]').remove();
 						const nextHr = el.closest(
 							'div[role="menuitemcheckbox"]',
@@ -136,6 +139,7 @@ class FlashcardTracker {
 			if (!this._categories.includes(editedCard.category)) {
 				this._categories.push(editedCard.category);
 			}
+			localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 			this._showToastNotification('update');
 			this._render();
@@ -149,10 +153,6 @@ class FlashcardTracker {
 	getAllFlashcards() {
 		return this._flashcards;
 	}
-
-	// getCurrentCardId() {
-	// 	return this._currentCard;
-	// }
 
 	getNextCard() {
 		const checkbox = document.getElementById('hide-mastered');
@@ -349,7 +349,7 @@ class FlashcardTracker {
 			'.categories-dropdown--content',
 		);
 
-		// categoriesEl.innerHTML = ``;
+		console.log(categoriesEl);
 
 		categoriesEl.forEach((el) => {
 			const cardCategory = this._formatCategoryName(card.category);
