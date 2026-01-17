@@ -78,8 +78,6 @@ class FlashcardTracker {
 				}
 			});
 
-			Storage.updateCategories(this._categories);
-
 			if (index > this._flashcards.length - 1) {
 				this._currentCard = 0;
 				Storage.updateCurrentCardId(this._currentCard);
@@ -88,7 +86,8 @@ class FlashcardTracker {
 				Storage.updateCurrentCardId(this._currentCard);
 			}
 
-			localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
+			Storage.updateFlashcards(this._flashcards);
+			Storage.updateCategories(this._categories);
 
 			this._showToastNotification('delete');
 			this._render();
@@ -354,8 +353,6 @@ class FlashcardTracker {
 		const categoriesEl = document.querySelectorAll(
 			'.categories-dropdown--content',
 		);
-
-		console.log(categoriesEl);
 
 		categoriesEl.forEach((el) => {
 			const cardCategory = this._formatCategoryName(card.category);
@@ -1291,11 +1288,20 @@ class App {
 				e.target.closest('.flashcard').remove();
 				this._fillAllCardsUpTo(12);
 				this._syncLoadMoreVisibility();
-
 				if (Storage.getTotalCards() === 0) {
 					document.querySelector('.no-flashcards').classList.remove('hidden');
 					document
 						.querySelector('.flashcard-container--main')
+						.classList.add('hidden');
+
+					document
+						.querySelector('.no-cards--all-cards')
+						.classList.remove('hidden');
+					document
+						.querySelector('.flashcard-container--all-cards')
+						.classList.add('hidden');
+					document
+						.querySelector('.all-cards-section-controls')
 						.classList.add('hidden');
 				} else if (
 					Storage.getTotalMasteredCards() === Storage.getTotalCards() &&
