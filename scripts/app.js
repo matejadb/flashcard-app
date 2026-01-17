@@ -78,6 +78,8 @@ class FlashcardTracker {
 				}
 			});
 
+			Storage.updateCategories(this._categories);
+
 			if (index > this._flashcards.length - 1) {
 				this._currentCard = 0;
 				Storage.updateCurrentCardId(this._currentCard);
@@ -139,7 +141,10 @@ class FlashcardTracker {
 			if (!this._categories.includes(editedCard.category)) {
 				this._categories.push(editedCard.category);
 			}
-			localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
+			Storage.updateCategories(this._categories);
+
+			Storage.updateFlashcards(this._flashcards);
+			// localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 			this._showToastNotification('update');
 			this._render();
@@ -244,7 +249,7 @@ class FlashcardTracker {
 
 		card.mastery++;
 
-		localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
+		Storage.updateFlashcards(this._flashcards);
 
 		const allCardElements = document.querySelectorAll(
 			`[data-id="${card.id}"] .progress-bar`,
@@ -293,7 +298,8 @@ class FlashcardTracker {
 			bar.setAttribute('aria-valuenow', card.mastery);
 			bar.setAttribute('data-progress', card.mastery);
 		});
-		localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
+
+		Storage.updateFlashcards(this._flashcards);
 
 		document
 			.querySelectorAll(`[data-id="${card.id}"] .progress-level`)
@@ -398,6 +404,8 @@ class FlashcardTracker {
 			if (!this._categories.includes(category)) {
 				this._categories.push(category);
 			}
+
+			Storage.updateCategories(this._categories);
 		});
 	}
 
@@ -549,6 +557,10 @@ class Storage {
 		localStorage.setItem('flashcards', JSON.stringify(flashcards));
 	}
 
+	static updateFlashcards(flashcards) {
+		localStorage.setItem('flashcards', JSON.stringify(flashcards));
+	}
+
 	static getCategories() {
 		let categories;
 
@@ -561,6 +573,10 @@ class Storage {
 	static saveCategory(category) {
 		const categories = Storage.getCategories();
 		categories.push(category);
+		localStorage.setItem('categories', JSON.stringify(categories));
+	}
+
+	static updateCategories(categories) {
 		localStorage.setItem('categories', JSON.stringify(categories));
 	}
 
