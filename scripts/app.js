@@ -7,6 +7,7 @@ class FlashcardTracker {
 		this._currentCard = Storage.getCurrentCardId();
 		this._flashcards = Storage.getFlashcards();
 		this._categories = Storage.getCategories();
+		this._categoryFilter = [];
 
 		this._displayTotalCards();
 		this._displayTotalMastered();
@@ -327,6 +328,18 @@ class FlashcardTracker {
 		return this._flashcards.filter((card) => card.mastery !== 5);
 	}
 
+	toggleCategoryFilter(category) {
+		if (this._categoryFilter.includes(category)) {
+			this._categoryFilter = this._categoryFilter.filter(
+				(cat) => cat !== category,
+			);
+		} else this._categoryFilter.push(category);
+	}
+
+	getCategoryFilters() {
+		return this._categoryFilter;
+	}
+
 	/* Private Methods */
 
 	_displayTotalCards() {
@@ -378,6 +391,7 @@ class FlashcardTracker {
 				)}" class="text--preset-5-medium ${cardCategory}">
 				${card.category} (${this._getNumberOfCategoryType(card.category)})
 				</label>`;
+
 				el.append(categoryEl, divider);
 			}
 		});
@@ -590,6 +604,51 @@ class App {
 
 		this._loadEventListeners();
 		this._loadItems();
+	}
+
+	_applyFilter() {
+		const container = document.querySelector('.flashcard-container--all-cards');
+		if (!container) return;
+
+		const allCards = container.querySelectorAll('.flashcard');
+		const activeFilters = this._tracker.getCategoryFilters();
+
+		allCards.forEach((cardEl) => {
+			const cardId = cardEl.getAttribute('data-id');
+			const card = this._tracker
+				.getAllFlashcards()
+				.find((c) => c.id === cardId);
+
+			if (!card) return;
+
+			const shouldShow =
+				activeFilters.length === 0 || activeFilters.includes(card.category);
+
+			if (shouldShow) {
+				cardEl.style.display = '';
+			} else {
+				cardEl.style.display = 'none';
+				cardEl.classList.add('flashcard-hidden');
+			}
+		});
+
+		this._fillAllCardsUpTo(12);
+		this._syncLoadMoreVisibility();
+	}
+
+	_handleCategoryCheckbox(e) {
+		const checkbox = e.target;
+		if (!checkbox.classList.contains('dropdown-element')) return;
+
+		const categoryText = checkbox.id.split('-')[1];
+
+		this._tracker.toggleCategoryFilter(categoryText);
+
+		const menuItem = checkbox.closest('div[role="menuitemcheckbox"]');
+		const isChecked = this._tracker.getCategoryFilters().includes(categoryText);
+		menuItem.setAttribute('aria-checked', isChecked);
+
+		this._applyFilter();
 	}
 
 	_loadItems() {
@@ -1369,6 +1428,11 @@ class App {
 				e.stopPropagation();
 				this._toggleMenuDropdown(menuBtn);
 			}
+		});
+
+		document.addEventListener('change', (e) => {
+			if (e.target.classList.contains('dropdown-element'))
+				this._handleCategoryCheckbox(e);
 		});
 
 		document
