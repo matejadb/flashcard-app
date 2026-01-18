@@ -7,6 +7,7 @@ class FlashcardTracker {
 		this._currentCard = Storage.getCurrentCardId();
 		this._flashcards = Storage.getFlashcards();
 		this._categories = Storage.getCategories();
+		this._categoryFilter = [];
 
 		this._displayTotalCards();
 		this._displayTotalMastered();
@@ -54,7 +55,7 @@ class FlashcardTracker {
 			}
 			this._flashcards.splice(index, 1);
 
-			const cardCategory = this._formatCategoryName(card.category);
+			const cardCategory = this.formatCategoryName(card.category);
 			let catNum = this._getNumberOfCategoryType(card.category);
 
 			const dropdownEl = document.querySelectorAll(`.${cardCategory}`);
@@ -109,7 +110,7 @@ class FlashcardTracker {
 
 			// Handle old category count decrease
 			if (oldCategory !== editedCard.category) {
-				const oldCategoryFormatted = this._formatCategoryName(oldCategory);
+				const oldCategoryFormatted = this.formatCategoryName(oldCategory);
 
 				const oldDropdownEl = document.querySelectorAll(
 					`.${oldCategoryFormatted}`,
@@ -143,7 +144,6 @@ class FlashcardTracker {
 			Storage.updateCategories(this._categories);
 
 			Storage.updateFlashcards(this._flashcards);
-			// localStorage.setItem('flashcards', JSON.stringify(this._flashcards));
 
 			this._showToastNotification('update');
 			this._render();
@@ -160,55 +160,83 @@ class FlashcardTracker {
 
 	getNextCard() {
 		const checkbox = document.getElementById('hide-mastered');
+		let cards = this._flashcards;
 
-		if (checkbox.checked) {
-			const flashcardsMasteredHidden = this.hideMastered();
-			if (this._currentCard + 1 > flashcardsMasteredHidden.length - 1) {
-				this._currentCard = 0;
-				Storage.updateCurrentCardId(this._currentCard);
-				return flashcardsMasteredHidden[0];
-			}
-
-			this._currentCard += 1;
-			Storage.updateCurrentCardId(this._currentCard);
-			return flashcardsMasteredHidden[this._currentCard];
+		if (this._categoryFilter.length > 0) {
+			cards = cards.filter((card) =>
+				this._categoryFilter.includes(card.category),
+			);
 		}
 
-		if (this._currentCard + 1 > this._flashcards.length - 1) {
-			this._currentCard = 0;
-			Storage.updateCurrentCardId(this._currentCard);
-			return this._flashcards[0];
+		if (checkbox?.checked) {
+			cards = cards.filter((card) => card.mastery !== 5);
 		}
 
-		this._currentCard += 1;
+		if (cards.length === 0) return null;
+
+		// Find current card index in filtered array
+		const currentCardInFiltered = cards.findIndex(
+			(c) => c.id === this._flashcards[this._currentCard]?.id,
+		);
+
+		if (
+			currentCardInFiltered === -1 ||
+			currentCardInFiltered + 1 >= cards.length
+		) {
+			// Loop back to first filtered card
+			const firstCardIndex = this._flashcards.findIndex(
+				(c) => c.id === cards[0].id,
+			);
+			this._currentCard = firstCardIndex;
+		} else {
+			// Move to next filtered card
+			const nextCardIndex = this._flashcards.findIndex(
+				(c) => c.id === cards[currentCardInFiltered + 1].id,
+			);
+			this._currentCard = nextCardIndex;
+		}
+
 		Storage.updateCurrentCardId(this._currentCard);
 		return this._flashcards[this._currentCard];
 	}
 
 	getPreviousCard() {
 		const checkbox = document.getElementById('hide-mastered');
+		let cards = this._flashcards;
 
-		if (checkbox.checked) {
-			const flashcardsMasteredHidden = this.hideMastered();
-
-			if (this._currentCard - 1 < 0) {
-				this._currentCard = flashcardsMasteredHidden.length - 1;
-				Storage.updateCurrentCardId(this._currentCard);
-				return flashcardsMasteredHidden[flashcardsMasteredHidden.length - 1];
-			}
-
-			this._currentCard -= 1;
-			Storage.updateCurrentCardId(this._currentCard);
-			return flashcardsMasteredHidden[this._currentCard];
+		// Apply category filter first
+		if (this._categoryFilter.length > 0) {
+			cards = cards.filter((card) =>
+				this._categoryFilter.includes(card.category),
+			);
 		}
 
-		if (this._currentCard - 1 < 0) {
-			this._currentCard = this._flashcards.length - 1;
-			Storage.updateCurrentCardId(this._currentCard);
-			return this._flashcards[this._flashcards.length - 1];
+		// Then apply mastered filter if needed
+		if (checkbox?.checked) {
+			cards = cards.filter((card) => card.mastery !== 5);
 		}
 
-		this._currentCard -= 1;
+		if (cards.length === 0) return null;
+
+		// Find current card index in filtered array
+		const currentCardInFiltered = cards.findIndex(
+			(c) => c.id === this._flashcards[this._currentCard]?.id,
+		);
+
+		if (currentCardInFiltered === -1 || currentCardInFiltered - 1 < 0) {
+			// Loop to last filtered card
+			const lastCardIndex = this._flashcards.findIndex(
+				(c) => c.id === cards[cards.length - 1].id,
+			);
+			this._currentCard = lastCardIndex;
+		} else {
+			// Move to previous filtered card
+			const prevCardIndex = this._flashcards.findIndex(
+				(c) => c.id === cards[currentCardInFiltered - 1].id,
+			);
+			this._currentCard = prevCardIndex;
+		}
+
 		Storage.updateCurrentCardId(this._currentCard);
 		return this._flashcards[this._currentCard];
 	}
@@ -324,7 +352,41 @@ class FlashcardTracker {
 	}
 
 	hideMastered() {
-		return this._flashcards.filter((card) => card.mastery !== 5);
+		let cards = this._flashcards;
+
+		if (this._categoryFilter.length > 0)
+			cards = cards.filter((card) =>
+				this._categoryFilter.includes(card.category),
+			);
+
+		return cards.filter((card) => card.mastery !== 5);
+	}
+
+	toggleCategoryFilter(category) {
+		if (this._categoryFilter.includes(category)) {
+			this._categoryFilter = this._categoryFilter.filter(
+				(cat) => cat !== category,
+			);
+		} else this._categoryFilter.push(category);
+	}
+
+	getCategoryFilters() {
+		return this._categoryFilter;
+	}
+
+	getFilteredCards() {
+		let cards = this._flashcards;
+
+		if (this._categoryFilter.length > 0)
+			cards = cards.filter((card) =>
+				this._categoryFilter.includes(card.category),
+			);
+
+		return cards;
+	}
+
+	formatCategoryName(category) {
+		return category.split(' ').join('-').toLowerCase();
 	}
 
 	/* Private Methods */
@@ -355,7 +417,7 @@ class FlashcardTracker {
 		);
 
 		categoriesEl.forEach((el) => {
-			const cardCategory = this._formatCategoryName(card.category);
+			const cardCategory = this.formatCategoryName(card.category);
 
 			const divider = document.createElement('hr');
 			const categoryEl = document.createElement('div');
@@ -373,11 +435,12 @@ class FlashcardTracker {
 				});
 			} else {
 				categoryEl.innerHTML = `<input type="checkbox" id="cat-${cardCategory}" class="dropdown-element" />
-				<label for="cat-${this._formatCategoryName(
+				<label for="cat-${this.formatCategoryName(
 					card.category,
 				)}" class="text--preset-5-medium ${cardCategory}">
 				${card.category} (${this._getNumberOfCategoryType(card.category)})
 				</label>`;
+
 				el.append(categoryEl, divider);
 			}
 		});
@@ -404,10 +467,6 @@ class FlashcardTracker {
 
 			Storage.updateCategories(this._categories);
 		});
-	}
-
-	_formatCategoryName(category) {
-		return category.split(' ').join('-').toLowerCase();
 	}
 
 	_getNumberOfCategoryType(category) {
@@ -592,6 +651,103 @@ class App {
 		this._loadItems();
 	}
 
+	_applyFilter() {
+		const container = document.querySelector('.flashcard-container--all-cards');
+		if (!container) return;
+
+		const allCards = container.querySelectorAll('.flashcard');
+		const activeFilters = this._tracker.getCategoryFilters();
+
+		allCards.forEach((cardEl) => {
+			const cardId = cardEl.getAttribute('data-id');
+			const card = this._tracker
+				.getAllFlashcards()
+				.find((c) => c.id === cardId);
+
+			if (!card) return;
+
+			const shouldShow =
+				activeFilters.length === 0 || activeFilters.includes(card.category);
+
+			if (shouldShow) {
+				cardEl.style.display = '';
+			} else {
+				cardEl.style.display = 'none';
+				cardEl.classList.add('flashcard-hidden');
+			}
+		});
+
+		this._fillAllCardsUpTo(12);
+		this._syncLoadMoreVisibility();
+	}
+
+	_applyStudyModeFilter() {
+		const filteredCards = this._tracker.getFilteredCards();
+
+		if (filteredCards.length === 0) {
+			// Show "no cards match filter" message
+			document
+				.querySelector('.flashcard-container--main')
+				.classList.add('hidden');
+			document.querySelector('.no-flashcards').classList.remove('hidden');
+			return;
+		}
+
+		// Show first filtered card
+		document
+			.querySelector('.flashcard-container--main')
+			.classList.remove('hidden');
+		document.querySelector('.no-flashcards').classList.add('hidden');
+
+		const firstCard = filteredCards[0];
+		this._displayCardStudyMode(firstCard);
+		this._updateCardNumberFiltered();
+	}
+
+	_handleCategoryCheckbox(e) {
+		const checkbox = e.target;
+		if (!checkbox.classList.contains('dropdown-element')) return;
+
+		const label = checkbox.nextElementSibling;
+		const categoryText = label.textContent.split('(')[0].trim();
+
+		this._tracker.toggleCategoryFilter(categoryText);
+
+		const isChecked = this._tracker.getCategoryFilters().includes(categoryText);
+		const categoryClass = this._tracker.formatCategoryName(categoryText);
+
+		document.querySelectorAll(`.${categoryClass}`).forEach((label) => {
+			const checkbox = label.previousElementSibling;
+			const menuItem = checkbox.closest('div[role="menuitemcheckbox"]');
+
+			menuItem.setAttribute('aria-checked', isChecked);
+			checkbox.checked = isChecked;
+		});
+
+		// Apply filter to all cards view
+		this._applyFilter();
+
+		// Apply filter to study mode
+		this._applyStudyModeFilter();
+	}
+
+	_updateCardNumberFiltered() {
+		const cardNum = document.querySelector('.card-number');
+		if (!cardNum) return;
+
+		const checkbox = document.getElementById('hide-mastered');
+		let cards = this._tracker.getFilteredCards();
+
+		if (checkbox?.checked) {
+			cards = cards.filter((card) => card.mastery !== 5);
+		}
+
+		const currentCard = this._tracker.getCurrentCard();
+		const currentIndex = cards.findIndex((c) => c.id === currentCard?.id);
+
+		cardNum.innerHTML = `Card ${currentIndex + 1} of ${cards.length}`;
+	}
+
 	_loadItems() {
 		const flashcards = Storage.getFlashcards();
 		if (flashcards.length === 0) return;
@@ -651,8 +807,14 @@ class App {
 				}`;
 			});
 		} else {
-			const flashcards = this._tracker.getAllFlashcards();
-			flashcards.forEach((card) => {
+			let cards = this._tracker.getAllFlashcards();
+			let filters = this._tracker.getCategoryFilters();
+
+			if (filters.length > 0) {
+				cards = cards.filter((card) => filters.includes(card.category));
+			}
+
+			cards.forEach((card) => {
 				this._displayNewCardAll(card);
 			});
 		}
@@ -695,12 +857,28 @@ class App {
 	}
 
 	_getNextCard() {
-		this._displayCardStudyMode(this._tracker.getNextCard());
+		const nextCard = this._tracker.getNextCard();
+		if (nextCard) {
+			this._displayCardStudyMode(nextCard);
+			this._updateCardNumberFiltered();
+		}
 	}
 
 	_getPreviousCard() {
-		this._displayCardStudyMode(this._tracker.getPreviousCard());
+		const prevCard = this._tracker.getPreviousCard();
+		if (prevCard) {
+			this._displayCardStudyMode(prevCard);
+			this._updateCardNumberFiltered();
+		}
 	}
+
+	// _getNextCard() {
+	// 	this._displayCardStudyMode(this._tracker.getNextCard());
+	// }
+
+	// _getPreviousCard() {
+	// 	this._displayCardStudyMode(this._tracker.getPreviousCard());
+	// }
 
 	_displayCardStudyMode(card) {
 		const checkbox = document.getElementById('hide-mastered');
@@ -1369,6 +1547,11 @@ class App {
 				e.stopPropagation();
 				this._toggleMenuDropdown(menuBtn);
 			}
+		});
+
+		document.addEventListener('change', (e) => {
+			if (e.target.classList.contains('dropdown-element'))
+				this._handleCategoryCheckbox(e);
 		});
 
 		document
